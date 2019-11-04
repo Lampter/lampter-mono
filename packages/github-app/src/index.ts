@@ -138,9 +138,7 @@ export = (app: Application) => {
       "pull_request_review_comment.deleted",
       "pull_request_review_comment.edited"
     ],
-    async (
-      _: Context<Webhooks.WebhookPayloadPullRequestReviewComment>
-    ) => {
+    async (_: Context<Webhooks.WebhookPayloadPullRequestReviewComment>) => {
       // TODO: Pull Request Review Comment Data Formating
     }
   );

@@ -1,11 +1,12 @@
 {
-    "extends": "../../tsconfig.json",
-    "compilerOptions": {
-        "module": "commonjs",
-        "outDir": "cjs",
-        "paths": {
-            "@lampter/*": ["node_modules/@lampter/*/src"]
-        }
-    },
-    "include": ["src"]
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "cjs",
+    "sourceMap": true,
+    "paths": {
+      "@lampter/*": ["node_modules/@lampter/*/src"]
+    }
+  },
+  "include": ["src"]
 }
