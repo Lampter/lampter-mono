@@ -1,0 +1,11 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "cjs",
+        "paths": {
+            "@lampter/*": ["node_modules/@lampter/*/src"]
+        }
+    },
+    "include": ["src"]
+}

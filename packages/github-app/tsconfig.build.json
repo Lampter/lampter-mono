@@ -1,0 +1,18 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "allowJs": false,
+        "lib": ["es2015", "es2017"],
+        "module": "commonjs",
+        "noImplicitReturns": true,
+        "noUnusedLocals": false,
+        "pretty": true,
+        "outDir": "./cjs",
+        "skipLibCheck": true,
+        "noImplicitAny": true,
+        "paths": {
+            "@lampter/*": ["node_modules/@lampter/*/src"]
+        }
+    },
+    "include": ["src"]
+}

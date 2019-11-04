@@ -1,0 +1,29 @@
+{
+    "name": "@lampter/github-app",
+    "version": "1.0.0",
+    "main": "cjs/index.js",
+    "types": "cjs/index.d.ts",
+    "scripts": {
+        "clean": "rimraf ./cjs",
+        "prebuild": "yarn clean",
+        "build": "tsc -p tsconfig.build.json",
+        "dev": "nodemon --exec \"npm start\"",
+        "start": "probot run ./cjs/index.js",
+        "test": "mocha \"test/**/*.spec.ts?(x)\""
+    },
+    "dependencies": {
+        "probot": "^9.0.1"
+    },
+    "devDependencies": {},
+    "engines": {
+        "node": ">= 8.3.0"
+    },
+    "license": "MIT",
+    "repository": "https://github.com//lampter-github-app.git",
+    "homepage": "https://github.com//lampter-github-app",
+    "bugs": "https://github.com//lampter-github-app/issues",
+    "private": true,
+    "publishConfig": {
+        "access": "public"
+    }
+}
