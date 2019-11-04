@@ -98,7 +98,7 @@ export = (app: Application) => {
     } = context;
 
     record = { githubId, name, action };
-    app.log(`${githubId} - ${name}${action && `.${action}`}`);
+    app.log(`${githubId} - ${name}${action && `.${action}`} `);
   });
 
   app.on(
