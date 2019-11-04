@@ -87,7 +87,8 @@ interface Record {
   content: RecordContentPR | { [key: string]: any }; // add the other event structures here
 }
 
-export default (app: Application) => {
+// @ts-ignore
+export = (app: Application) => {
   let record: Partial<Record> = {};
   app.on(`*`, async (context: Context<WebhookCommon>) => {
     const {
@@ -96,7 +97,7 @@ export default (app: Application) => {
       payload: { action }
     } = context;
 
-    record = {...record,  githubId, name, action };
+    record = { githubId, name, action };
     app.log(`${githubId} - ${name}${action && `.${action}`}`);
   });
 

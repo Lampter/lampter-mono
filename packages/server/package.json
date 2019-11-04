@@ -26,7 +26,7 @@
         "src"
     ],
     "license": "MIT",
-    "repository": "git@github.com:wixplosives/lampter.git",
+    "repository": "https://github.com/Lampter/lampter-mono.git",
     "private": true,
     "publishConfig": {
         "access": "public"

@@ -19,9 +19,7 @@
         "node": ">= 8.3.0"
     },
     "license": "MIT",
-    "repository": "https://github.com//lampter-github-app.git",
-    "homepage": "https://github.com//lampter-github-app",
-    "bugs": "https://github.com//lampter-github-app/issues",
+    "repository": "https://github.com/Lampter/lampter-mono.git",
     "private": true,
     "publishConfig": {
         "access": "public"

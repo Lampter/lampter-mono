@@ -22,7 +22,7 @@
         "src"
     ],
     "license": "MIT",
-    "repository": "git@github.com:wixplosives/lampter.git",
+    "repository": "https://github.com/Lampter/lampter-mono.git",
     "sideEffects": false,
     "private": true,
     "publishConfig": {
