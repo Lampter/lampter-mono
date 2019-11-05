@@ -8,6 +8,16 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type Lens {
+  """Id of the lens."""
+  id: Float!
+
+  """Title of the lens."""
+  title: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Mutation {
   signIn(email: String!, password: String!): Token!
   register(email: String!, password: String!): Token!
@@ -19,6 +29,19 @@ type Query {
 
 type Token {
   token: String!
+}
+
+type Trace {
+  """Id of the trace."""
+  id: Float!
+
+  """Title of the trace."""
+  title: String!
+
+  """Lens of the trace."""
+  lensId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type User {
