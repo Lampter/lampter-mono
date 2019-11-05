@@ -12,7 +12,7 @@ module.exports = merge.smart(common, {
   entry: ["webpack/hot/poll?1000", join(__dirname, "src", "server-bootstrap")],
   externals: [
     nodeExternals({
-      whitelist: ["webpack/hot/poll?1000"]
+      whitelist: ["webpack/hot/poll?1000", "bufferutil", "utf-8-validate"]
     })
   ],
   target: "node",

@@ -41,17 +41,6 @@ const resolvers = {
 const server = new ApolloServer({
   typeDefs: [typeDef],
   resolvers: [resolvers]
-  // context: async ({ event, context }) => {
-  //   const ctx = {
-  //     headers: event.headers,
-  //     functionName: context.functionName,
-  //     event,
-  //     context,
-  //     db
-  //   };
-  //   ctx.me = await getMe(ctx);
-  //   return ctx;
-  // }
 });
 
 export default server;
