@@ -9,7 +9,7 @@
     "lint": "eslint . --ext .js,.ts,.tsx -f codeframe",
     "pretest": "yarn typecheck && yarn lint",
     "test": "mocha \"packages/**/test/**/*.spec.ts?(x)\"",
-    "start": "yarn workspace @lampter/client start",
+    "start": "yarn workspace @lampter/server start",
     "prettify": "yarn prettier \"packages/**/*.{js,ts,tsx}\" --write",
     "typecheck": "tsc --noEmit"
   },
