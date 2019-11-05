@@ -8,45 +8,45 @@ import {
   BelongsTo,
   Table,
   UpdatedAt,
-} from 'sequelize-typescript'
-import { Field, ObjectType } from 'type-graphql'
+} from "sequelize-typescript";
+import { Field, ObjectType } from "type-graphql";
 
-import Application from './Application'
+import Application from "./Application";
 
 @ObjectType()
 @Table
 export default class Project extends Model<Project> {
-  @Field({ description: 'Id of the project.' })
+  @Field({ description: "Id of the project." })
   @PrimaryKey
   @AutoIncrement
   @Column
-  public id!: number
+  public id!: number;
 
   @Field({ description: "Original Id of the project in it's application." })
   @Column
-  public originalId!: string
+  public originalId!: string;
 
-  @Field({ description: 'Title of the project.' })
+  @Field({ description: "Title of the project." })
   @Column
-  public title!: string
+  public title!: string;
 
-  @Field({ description: 'Url of the project.' })
+  @Field({ description: "Url of the project." })
   @Column
-  public url!: string
+  public url!: string;
 
-  @Field({ description: 'Application of the project.' })
+  @Field({ description: "Application of the project." })
   @ForeignKey(() => Application)
   @Column
-  public applicationId!: number
+  public applicationId!: number;
 
   @BelongsTo(() => Application)
-  public application!: Application
+  public application!: Application;
 
   @Field()
   @CreatedAt
-  public createdAt!: Date
+  public createdAt!: Date;
 
   @Field()
   @UpdatedAt
-  public updatedAt!: Date
+  public updatedAt!: Date;
 }

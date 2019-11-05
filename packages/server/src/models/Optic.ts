@@ -9,64 +9,64 @@ import {
   Table,
   DataType,
   UpdatedAt,
-} from 'sequelize-typescript'
-import { Field, ObjectType } from 'type-graphql'
+} from "sequelize-typescript";
+import { Field, ObjectType } from "type-graphql";
 
-import Lens from './Lens'
-import Project from './Project'
-import Repository from './Repository'
+import Lens from "./Lens";
+import Project from "./Project";
+import Repository from "./Repository";
 
 enum OpticRelation {
-  PRIMARY = 'PRIMARY',
-  DEPENDANT = 'DEPENDANT',
-  INFORMATIONAL = 'INFORMATIONAL',
+  PRIMARY = "PRIMARY",
+  DEPENDANT = "DEPENDANT",
+  INFORMATIONAL = "INFORMATIONAL",
 }
 
 @ObjectType()
 @Table
 export default class Optic extends Model<Optic> {
-  @Field({ description: 'Id of the optic.' })
+  @Field({ description: "Id of the optic." })
   @PrimaryKey
   @AutoIncrement
   @Column
-  public id!: number
+  public id!: number;
 
-  @Field({ description: 'Lens of the optic.' })
+  @Field({ description: "Lens of the optic." })
   @ForeignKey(() => Lens)
   @Column
-  public lensId!: number
+  public lensId!: number;
 
   @BelongsTo(() => Lens)
-  public lens!: Lens
+  public lens!: Lens;
 
-  @Field({ description: 'Reference table of the optic.' })
+  @Field({ description: "Reference table of the optic." })
   @Column
-  public reference!: string
+  public reference!: string;
 
-  @Field({ description: 'Reference Id of the optic.' })
+  @Field({ description: "Reference Id of the optic." })
   @Column
-  public referenceId!: number
+  public referenceId!: number;
 
-  @Field({ description: 'Relation of the optic.' })
+  @Field({ description: "Relation of the optic." })
   @Column({
     type: DataType.ENUM(...Object.keys(OpticRelation)),
   })
-  public relation!: OpticRelation
+  public relation!: OpticRelation;
 
-  @BelongsTo(() => Project, { foreignKey: 'referenceId', constraints: false })
-  public project!: Project
+  @BelongsTo(() => Project, { foreignKey: "referenceId", constraints: false })
+  public project!: Project;
 
   @BelongsTo(() => Repository, {
-    foreignKey: 'referenceId',
+    foreignKey: "referenceId",
     constraints: false,
   })
-  public repository!: Repository
+  public repository!: Repository;
 
   @Field()
   @CreatedAt
-  public createdAt!: Date
+  public createdAt!: Date;
 
   @Field()
   @UpdatedAt
-  public updatedAt!: Date
+  public updatedAt!: Date;
 }

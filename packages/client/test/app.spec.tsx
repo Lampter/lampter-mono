@@ -1,14 +1,14 @@
-import { expect } from 'chai'
-import React from 'react'
-import { App } from '@lampter/client'
-import { renderToString } from 'react-dom/server'
+import { expect } from "chai";
+import React from "react";
+import { App } from "@lampter/client";
+import { renderToString } from "react-dom/server";
 
-describe('<App />', () => {
-  it('renders without throwing on the server', () => {
-    expect(() => renderToString(<App text="" />)).to.not.throw()
-  })
+describe("<App />", () => {
+  it("renders without throwing on the server", () => {
+    expect(() => renderToString(<App text="" />)).to.not.throw();
+  });
 
-  it('renders provided text', () => {
-    expect(renderToString(<App text="It works" />)).to.contain('It works')
-  })
-})
+  it("renders provided text", () => {
+    expect(renderToString(<App text="It works" />)).to.contain("It works");
+  });
+});

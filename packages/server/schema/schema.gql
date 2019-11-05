@@ -37,6 +37,25 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type Event {
+  """Id of the event."""
+  id: Float!
+
+  """Reference table of the event."""
+  reference: String!
+
+  """Reference Id of the event."""
+  referenceId: Float!
+
+  """Action of the event."""
+  relation: String!
+
+  """Payload of the event."""
+  payload: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Issue {
   """Id of the issue."""
   id: Float!
@@ -113,6 +132,64 @@ type Project {
   url: String!
 
   """Application of the project."""
+  applicationId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PullRequest {
+  """Id of the pull request."""
+  id: Float!
+
+  """Original Id of the pull request in it's application."""
+  originalId: String!
+
+  """Title of the pull request."""
+  title: String!
+
+  """Body of the pull request."""
+  body: String!
+
+  """Commit count of the pull request."""
+  commits: Float!
+
+  """head of the pull request."""
+  head: String!
+
+  """base of the pull request."""
+  base: String!
+
+  """State of the pull request."""
+  state: String!
+
+  """Is the pull request merged?."""
+  merged: Boolean!
+
+  """Is the pull request mergeable?."""
+  mergeable: Boolean!
+
+  """Is the pull request rebaseable?."""
+  rebaseable: Boolean!
+
+  """Mergeable state of the pull request."""
+  mergeableState: String!
+
+  """Url of the pull request."""
+  url: String!
+
+  """Diff Url of the pull request."""
+  diffUrl: String!
+
+  """Patch Url of the pull request."""
+  patchUrl: String!
+
+  """Trace of the pull request."""
+  traceId: Float!
+
+  """Repository of the pull request."""
+  repositoryId: Float!
+
+  """Application of the pull request."""
   applicationId: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
