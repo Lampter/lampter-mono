@@ -18,6 +18,28 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type Issue {
+  """Id of the issue."""
+  id: Float!
+
+  """Title of the issue."""
+  title: String!
+
+  """Body of the issue."""
+  body: String!
+
+  """Trace of the issue."""
+  traceId: Float!
+
+  """Project of the issue."""
+  projectId: Float!
+
+  """Url of the issue."""
+  url: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Lens {
   """Id of the lens."""
   id: Float!
