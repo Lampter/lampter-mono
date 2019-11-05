@@ -3,6 +3,16 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Application {
+  """Id of the application."""
+  id: Float!
+
+  """Title of the application."""
+  title: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -23,8 +33,46 @@ type Mutation {
   register(email: String!, password: String!): Token!
 }
 
+type Project {
+  """Id of the project."""
+  id: Float!
+
+  """Original Id of the project in it's application."""
+  originalId: String!
+
+  """Title of the project."""
+  title: String!
+
+  """Url of the project."""
+  url: String!
+
+  """Application of the project."""
+  applicationId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   me: User!
+}
+
+type Repository {
+  """Id of the repository."""
+  id: Float!
+
+  """Original Id of the repository in it's application."""
+  originalId: String!
+
+  """Title of the repository."""
+  title: String!
+
+  """Url of the repository."""
+  url: String!
+
+  """Application of the repository."""
+  applicationId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Token {
