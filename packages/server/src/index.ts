@@ -1,10 +1,13 @@
+import "./env";
 import { ApolloServer } from "apollo-server-express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import expressJwt from "express-jwt";
 import path from "path";
 import { db } from "./db";
 import { buildSchema } from "type-graphql";
+import { customAuthChecker } from "./utils/CustomAuthChecker";
 
 const PORT = process.env.PORT || 5000;
 const GQLPATH = "/graphql";
@@ -16,7 +19,7 @@ const main = async () => {
   });
 
   const schema = await buildSchema({
-    // authChecker: customAuthChecker,
+    authChecker: customAuthChecker,
     emitSchemaFile: path.resolve(__dirname, "..", "schema", "schema.gql"),
     // .js instead of .ts because ts will transpile into js
     resolvers: [`${__dirname}/resolvers/*.resolver.js`]
@@ -25,11 +28,11 @@ const main = async () => {
   const app = express();
 
   const server = new ApolloServer({
-    context: ({ req }) => {
+    context: ({ req }: any) => {
       const context = {
         req,
-        db
-        // user: req.user // `req.user` comes from `express-jwt`
+        db,
+        user: req.user // `req.user` comes from `express-jwt`
       };
       return context;
     },
@@ -38,13 +41,13 @@ const main = async () => {
     playground: true
   });
 
-  // app.use(
-  //   GQLPATH,
-  //   expressJwt({
-  //     credentialsRequired: false,
-  //     secret: process.env.CRYPTO_KEY!
-  //   })
-  // );
+  app.use(
+    GQLPATH,
+    expressJwt({
+      credentialsRequired: false,
+      secret: process.env.CRYPTO_KEY!
+    })
+  );
 
   server.applyMiddleware({ app, path: GQLPATH });
 

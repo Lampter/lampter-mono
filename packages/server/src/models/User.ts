@@ -1,8 +1,7 @@
 import {
   Column,
   CreatedAt,
-  DataType,
-  Default,
+  AutoIncrement,
   Model,
   PrimaryKey,
   Table,
@@ -14,9 +13,10 @@ import { Field, ObjectType } from "type-graphql";
 @ObjectType()
 @Table
 export default class User extends Model<User> {
+  @Field({ description: "Id of the user." })
   @PrimaryKey
-  @Default(DataType.INTEGER)
-  @Column({ primaryKey: true, type: DataType.INTEGER })
+  @AutoIncrement
+  @Column
   public id!: number;
 
   @Field({ description: "Email of the user." })
