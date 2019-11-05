@@ -29,6 +29,7 @@ export default class Project extends Model<Project> {
   public originalId!: string;
 
   @Field({ description: "Title of the project." })
+  @Unique
   @Column
   public title!: string;
 

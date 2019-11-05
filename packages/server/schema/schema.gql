@@ -28,6 +28,25 @@ type Lens {
   updatedAt: DateTime!
 }
 
+type LensComponent {
+  """Id of the lens."""
+  id: Float!
+
+  """Lens of the lens."""
+  lensId: Float!
+
+  """Component type of the lens."""
+  component: String!
+
+  """Component Id of the lens"""
+  componentId: Float!
+
+  """Component Id of the lens"""
+  relation: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Mutation {
   signIn(email: String!, password: String!): Token!
   register(email: String!, password: String!): Token!
