@@ -65,4 +65,8 @@ const main = async () => {
   app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 };
 
-main();
+main()
+  .then(() => {})
+  .catch(e => {
+    throw e;
+  });

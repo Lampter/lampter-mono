@@ -37,7 +37,7 @@ class Token {
 @Resolver(User)
 export default class UserResolver {
   @Authorized([Role.USER])
-  @Query(returns => User)
+  @Query(() => User)
   public async me(@Ctx() ctx: Context) {
     if (ctx.user && ctx.user.role === Role.USER) {
       const user = await User.findOne({
