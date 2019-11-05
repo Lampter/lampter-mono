@@ -4,7 +4,7 @@ const nodeExternals = require("webpack-node-externals");
 const monorepoRoot = join(__dirname, "..", "..");
 
 module.exports = {
-  externals: [nodeExternals()],
+  externals: [nodeExternals({})],
   target: "node",
   output: {
     filename: "index.js",
