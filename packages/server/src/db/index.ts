@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript'
 
 import User from '../models/User'
 import Lens from '../models/Lens'
-import LensComponent from '../models/LensComponent'
+import Optic from '../models/Optic'
 import Trace from '../models/Trace'
 import Application from '../models/Application'
 import Repository from '../models/Repository'
@@ -12,5 +12,5 @@ import Issue from '../models/Issue'
 export const db = new Sequelize({
   dialect: 'sqlite',
   storage: './dev.db',
-  models: [User, Lens, LensComponent, Trace, Application, Repository, Project, Issue],
+  models: [User, Lens, Optic, Trace, Application, Repository, Project, Issue],
 })

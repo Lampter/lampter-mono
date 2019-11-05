@@ -16,7 +16,7 @@ import Lens from './Lens'
 import Project from './Project'
 import Repository from './Repository'
 
-enum LensComponentRelation {
+enum OpticRelation {
   PRIMARY = 'PRIMARY',
   DEPENDANT = 'DEPENDANT',
   INFORMATIONAL = 'INFORMATIONAL',
@@ -24,7 +24,7 @@ enum LensComponentRelation {
 
 @ObjectType()
 @Table
-export default class LensComponent extends Model<LensComponent> {
+export default class Optic extends Model<Optic> {
   @Field({ description: 'Id of the lens.' })
   @PrimaryKey
   @AutoIncrement
@@ -39,25 +39,25 @@ export default class LensComponent extends Model<LensComponent> {
   @BelongsTo(() => Lens)
   public lens!: Lens
 
-  @Field({ description: 'Component type of the lens.' })
+  @Field({ description: 'Optic type of the lens.' })
   @Column
-  public component!: string
+  public optic!: string
 
-  @Field({ description: 'Component Id of the lens' })
+  @Field({ description: 'Optic Id of the lens' })
   @Column
-  public componentId!: number
+  public opticId!: number
 
-  @Field({ description: 'Component Id of the lens' })
+  @Field({ description: 'Optic Id of the lens' })
   @Column({
-    type: DataType.ENUM(...Object.keys(LensComponentRelation)),
+    type: DataType.ENUM(...Object.keys(OpticRelation)),
   })
-  public relation!: LensComponentRelation
+  public relation!: OpticRelation
 
-  @BelongsTo(() => Project, { foreignKey: 'componentId', constraints: false })
+  @BelongsTo(() => Project, { foreignKey: 'opticId', constraints: false })
   public project!: Project
 
   @BelongsTo(() => Repository, {
-    foreignKey: 'componentId',
+    foreignKey: 'opticId',
     constraints: false,
   })
   public repository!: Repository

@@ -6,15 +6,13 @@ import {
   PrimaryKey,
   Table,
   BelongsToMany,
-  Unique,
   UpdatedAt,
-  Scopes,
 } from 'sequelize-typescript'
 import { Field, ObjectType } from 'type-graphql'
 
 import Project from './Project'
 import Repository from './Repository'
-import LensComponent from './LensComponent'
+import Optic from './Optic'
 
 @ObjectType()
 @Table
@@ -30,26 +28,26 @@ export default class Lens extends Model<Lens> {
   public title!: string
 
   @BelongsToMany(() => Project, {
-    through: () => LensComponent,
+    through: () => Optic,
     scope: {
-      component: 'project',
+      optic: 'project',
     },
     foreignKey: 'lensId',
-    otherKey: 'componentId',
+    otherKey: 'opticId',
     constraints: false,
   })
-  public projects!: Array<Project & { LensComponent: LensComponent }>
+  public projects!: Array<Project & { Optic: Optic }>
 
   @BelongsToMany(() => Repository, {
-    through: () => LensComponent,
+    through: () => Optic,
     scope: {
-      component: 'repository',
+      optic: 'repository',
     },
     foreignKey: 'lensId',
-    otherKey: 'componentId',
+    otherKey: 'opticId',
     constraints: false,
   })
-  public repositories!: Array<Repository & { LensComponent: LensComponent }>
+  public repositories!: Array<Repository & { Optic: Optic }>
 
   @Field()
   @CreatedAt

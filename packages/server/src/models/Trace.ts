@@ -7,7 +7,6 @@ import {
   BelongsTo,
   Table,
   ForeignKey,
-  Unique,
   UpdatedAt,
 } from 'sequelize-typescript'
 import { Field, ObjectType } from 'type-graphql'
