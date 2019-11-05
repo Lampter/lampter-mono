@@ -24,17 +24,16 @@ export default class Trace extends Model<Trace> {
   public id!: number
 
   @Field({ description: 'Title of the trace.' })
-  @Unique
   @Column
   public title!: string
 
   @Field({ description: 'Lens of the trace.' })
   @ForeignKey(() => Lens)
   @Column
-  lensId: number
+  public lensId!: number
 
   @BelongsTo(() => Lens)
-  lens: Lens
+  public lens!: Lens
 
   @Field()
   @CreatedAt

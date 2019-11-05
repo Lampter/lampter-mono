@@ -22,11 +22,17 @@ type Issue {
   """Id of the issue."""
   id: Float!
 
+  """Original Id of the Issue in it's application."""
+  originalId: String!
+
   """Title of the issue."""
   title: String!
 
   """Body of the issue."""
   body: String!
+
+  """Url of the issue."""
+  url: String!
 
   """Trace of the issue."""
   traceId: Float!
@@ -34,8 +40,8 @@ type Issue {
   """Project of the issue."""
   projectId: Float!
 
-  """Url of the issue."""
-  url: String!
+  """Application of the issue."""
+  applicationId: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

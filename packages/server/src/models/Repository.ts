@@ -24,7 +24,6 @@ export default class Repository extends Model<Repository> {
   public id!: number
 
   @Field({ description: "Original Id of the repository in it's application." })
-  @Unique
   @Column
   public originalId!: string
 
@@ -33,17 +32,16 @@ export default class Repository extends Model<Repository> {
   public title!: string
 
   @Field({ description: 'Url of the repository.' })
-  @Unique
   @Column
   public url!: string
 
   @Field({ description: 'Application of the repository.' })
   @ForeignKey(() => Application)
   @Column
-  applicationId: number
+  public applicationId!: number
 
   @BelongsTo(() => Application)
-  application: Application
+  public application!: Application
 
   @Field()
   @CreatedAt

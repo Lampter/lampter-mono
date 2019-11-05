@@ -14,6 +14,7 @@ import { Field, ObjectType } from 'type-graphql'
 
 import Trace from './Trace'
 import Project from './Project'
+import Application from './Application'
 
 @ObjectType()
 @Table
@@ -24,8 +25,11 @@ export default class Issue extends Model<Issue> {
   @Column
   public id!: number
 
+  @Field({ description: "Original Id of the Issue in it's application." })
+  @Column
+  public originalId!: string
+
   @Field({ description: 'Title of the issue.' })
-  @Unique
   @Column
   public title!: string
 
@@ -33,26 +37,33 @@ export default class Issue extends Model<Issue> {
   @Column
   public body!: string
 
+  @Field({ description: 'Url of the issue.' })
+  @Column
+  public url!: string
+
   @Field({ description: 'Trace of the issue.' })
   @ForeignKey(() => Trace)
   @Column
-  traceId: number
+  public traceId!: number
 
   @BelongsTo(() => Trace)
-  trace: Trace
+  public trace!: Trace
 
   @Field({ description: 'Project of the issue.' })
   @ForeignKey(() => Project)
   @Column
-  projectId: number
+  public projectId!: number
 
   @BelongsTo(() => Project)
-  project: Project
+  public project!: Project
 
-  @Field({ description: 'Url of the issue.' })
-  @Unique
+  @Field({ description: 'Application of the issue.' })
+  @ForeignKey(() => Application)
   @Column
-  public url!: string
+  public applicationId!: number
+
+  @BelongsTo(() => Application)
+  public application!: Application
 
   @Field()
   @CreatedAt

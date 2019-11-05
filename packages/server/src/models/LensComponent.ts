@@ -34,18 +34,18 @@ export default class LensComponent extends Model<LensComponent> {
   @Field({ description: 'Lens of the lens.' })
   @ForeignKey(() => Lens)
   @Column
-  lensId: number
+  public lensId!: number
 
   @BelongsTo(() => Lens)
-  lens: Lens
+  public lens!: Lens
 
   @Field({ description: 'Component type of the lens.' })
   @Column
-  component: string
+  public component!: string
 
   @Field({ description: 'Component Id of the lens' })
   @Column
-  componentId: number
+  public componentId!: number
 
   @Field({ description: 'Component Id of the lens' })
   @Column({
@@ -54,13 +54,13 @@ export default class LensComponent extends Model<LensComponent> {
   public relation!: LensComponentRelation
 
   @BelongsTo(() => Project, { foreignKey: 'componentId', constraints: false })
-  project: Project
+  public project!: Project
 
   @BelongsTo(() => Repository, {
     foreignKey: 'componentId',
     constraints: false,
   })
-  repository: Repository
+  public repository!: Repository
 
   @Field()
   @CreatedAt

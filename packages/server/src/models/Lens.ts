@@ -26,7 +26,6 @@ export default class Lens extends Model<Lens> {
   public id!: number
 
   @Field({ description: 'Title of the lens.' })
-  @Unique
   @Column
   public title!: string
 
