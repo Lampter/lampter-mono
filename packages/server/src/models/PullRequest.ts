@@ -44,12 +44,12 @@ export default class PullRequest extends Model<PullRequest> {
   public commits!: number
 
   @Field({ description: 'head of the pull request.' })
-  @Column({type: DataType.JSON})
-  public head!: object;
+  @Column({ type: DataType.JSON })
+  public head!: object
 
   @Field({ description: 'base of the pull request.' })
-  @Column({type: DataType.JSON})
-  public base!: object;
+  @Column({ type: DataType.JSON })
+  public base!: object
 
   @Field({ description: 'State of the pull request.' })
   @Column

@@ -38,7 +38,7 @@ export default class Lens extends Model<Lens> {
     otherKey: 'componentId',
     constraints: false,
   })
-  projects: Array<Project & { LensComponent: LensComponent }>
+  public projects!: Array<Project & { LensComponent: LensComponent }>
 
   @BelongsToMany(() => Repository, {
     through: () => LensComponent,
@@ -49,7 +49,7 @@ export default class Lens extends Model<Lens> {
     otherKey: 'componentId',
     constraints: false,
   })
-  repositories: Array<Repository & { LensComponent: LensComponent }>
+  public repositories!: Array<Repository & { LensComponent: LensComponent }>
 
   @Field()
   @CreatedAt
