@@ -14,8 +14,7 @@ type Mutation {
 }
 
 type Query {
-  user: User!
-  userByEmail(email: String!): User!
+  me: User!
 }
 
 type Token {

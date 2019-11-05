@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import {
-  Arg,
   Args,
   Authorized,
   Ctx,
@@ -39,7 +38,7 @@ class Token {
 export default class UserResolver {
   @Authorized([Role.USER])
   @Query(returns => User)
-  public async user(@Ctx() ctx: Context) {
+  public async me(@Ctx() ctx: Context) {
     if (ctx.user && ctx.user.role === Role.USER) {
       const user = await User.findOne({
         where: { id: ctx.user.id }
@@ -50,17 +49,6 @@ export default class UserResolver {
       return user;
     }
     throw new Error("User not found");
-  }
-
-  @Query(_ => User)
-  public async userByEmail(@Arg("email") email: string) {
-    const user = await User.findOne({
-      where: { email }
-    });
-    if (!user) {
-      throw new Error("User not found");
-    }
-    return user;
   }
 
   @Mutation(() => Token)
