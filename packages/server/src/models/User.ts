@@ -1,37 +1,28 @@
-import {
-  Column,
-  CreatedAt,
-  AutoIncrement,
-  Model,
-  PrimaryKey,
-  Table,
-  Unique,
-  UpdatedAt
-} from "sequelize-typescript";
-import { Field, ObjectType } from "type-graphql";
+import { Column, CreatedAt, AutoIncrement, Model, PrimaryKey, Table, Unique, UpdatedAt } from 'sequelize-typescript'
+import { Field, ObjectType } from 'type-graphql'
 
 @ObjectType()
 @Table
 export default class User extends Model<User> {
-  @Field({ description: "Id of the user." })
+  @Field({ description: 'Id of the user.' })
   @PrimaryKey
   @AutoIncrement
   @Column
-  public id!: number;
+  public id!: number
 
-  @Field({ description: "Email of the user." })
+  @Field({ description: 'Email of the user.' })
   @Unique
   @Column
-  public email!: string;
+  public email!: string
 
   @Column
-  public password!: string;
+  public password!: string
 
   @Field()
   @CreatedAt
-  public createdAt!: Date;
+  public createdAt!: Date
 
   @Field()
   @UpdatedAt
-  public updatedAt!: Date;
+  public updatedAt!: Date
 }

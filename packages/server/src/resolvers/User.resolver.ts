@@ -1,37 +1,27 @@
-import bcrypt from "bcrypt";
-import jsonwebtoken from "jsonwebtoken";
-import {
-  Args,
-  Authorized,
-  Ctx,
-  Mutation,
-  Query,
-  ArgsType,
-  Field,
-  Resolver,
-  ObjectType
-} from "type-graphql";
-import User from "../models/User";
-import { IsEmail, Length } from "class-validator";
-import { Context, UserPayLoad, Role } from "../utils/Context";
+import bcrypt from 'bcrypt'
+import jsonwebtoken from 'jsonwebtoken'
+import { Args, Authorized, Ctx, Mutation, Query, ArgsType, Field, Resolver, ObjectType } from 'type-graphql'
+import User from '../models/User'
+import { IsEmail, Length } from 'class-validator'
+import { Context, UserPayLoad, Role } from '../utils/Context'
 
-const expiresIn = "1d";
+const expiresIn = '1d'
 
 @ArgsType()
 class AuthInputArgs {
   @Field()
   @IsEmail()
-  public email!: string;
+  public email!: string
 
   @Field()
   @Length(8, 255)
-  public password!: string;
+  public password!: string
 }
 
 @ObjectType()
 class Token {
   @Field()
-  public token!: string;
+  public token!: string
 }
 
 @Resolver(User)
@@ -41,72 +31,72 @@ export default class UserResolver {
   public async me(@Ctx() ctx: Context) {
     if (ctx.user && ctx.user.role === Role.USER) {
       const user = await User.findOne({
-        where: { id: ctx.user.id }
-      });
+        where: { id: ctx.user.id },
+      })
       if (!user) {
-        throw new Error("User not found");
+        throw new Error('User not found')
       }
-      return user;
+      return user
     }
-    throw new Error("User not found");
+    throw new Error('User not found')
   }
 
   @Mutation(() => Token)
   public async signIn(@Args()
   {
     email,
-    password
+    password,
   }: AuthInputArgs) {
     // Check if the user is valid
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } })
 
     if (!user) {
-      throw new Error("No user with that email");
+      throw new Error('No user with that email')
     }
 
     // Check if the password is valid
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(password, user.password)
     if (!valid) {
-      throw new Error("Incorrect password");
+      throw new Error('Incorrect password')
     }
     const payload: UserPayLoad = {
       id: user.id,
-      role: Role.USER
-    };
+      role: Role.USER,
+    }
     // Generate a new token a save it
     const token = jsonwebtoken.sign(payload, process.env.CRYPTO_KEY!, {
-      expiresIn
-    });
+      expiresIn,
+    })
 
-    return { token };
+    return { token }
   }
 
   @Mutation(() => Token)
   public async register(@Args()
   {
     email,
-    password
+    password,
   }: AuthInputArgs) {
     // Find if there is an existing account
-    const user = await User.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } })
 
     if (user) {
-      throw new Error("Email exists");
+      throw new Error('Email exists')
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10)
 
     const newUser = await User.create({
       email,
-      password: hashedPassword
-    });
+      password: hashedPassword,
+    })
     const payload: UserPayLoad = {
       id: newUser.id,
-      role: Role.USER
-    };
+      role: Role.USER,
+    }
     const token = jsonwebtoken.sign(payload, process.env.CRYPTO_KEY!, {
-      expiresIn
-    });
-    return { token };
+      expiresIn,
+    })
+    return { token }
   }
 }

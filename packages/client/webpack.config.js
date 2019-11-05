@@ -1,42 +1,42 @@
-const { join } = require("path");
-const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { join } = require('path')
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-const monorepoRoot = join(__dirname, "..", "..");
+const monorepoRoot = join(__dirname, '..', '..')
 
 module.exports = {
-  devtool: "source-map",
+  devtool: 'source-map',
   context: monorepoRoot,
-  entry: join(__dirname, "src", "client-bootstrap"),
+  entry: join(__dirname, 'src', 'client-bootstrap'),
   output: {
-    path: join(__dirname, "umd")
+    path: join(__dirname, 'umd'),
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: "@ts-tools/webpack-loader"
+        loader: '@ts-tools/webpack-loader',
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
-      }
-    ]
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+    ],
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".mjs", ".js", ".json"],
+    extensions: ['.ts', '.tsx', '.mjs', '.js', '.json'],
     plugins: [
       new TsconfigPathsPlugin({
-        configFile: join(monorepoRoot, "tsconfig.json")
-      })
-    ]
+        configFile: join(monorepoRoot, 'tsconfig.json'),
+      }),
+    ],
   },
   plugins: [
-    new HtmlWebpackPlugin({ title: "lampter Monorepo App" }),
+    new HtmlWebpackPlugin({ title: 'lampter Monorepo App' }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[name].css"
-    })
-  ]
-};
+      filename: '[name].css',
+      chunkFilename: '[name].css',
+    }),
+  ],
+}

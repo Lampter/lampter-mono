@@ -1,10 +1,8 @@
-import React from "react";
-import { Main } from "@lampter/components";
+import React from 'react'
+import { Main } from '@lampter/components'
 
 export interface AppProps {
-  text: string;
+  text: string
 }
 
-export const App: React.FunctionComponent<AppProps> = ({ text }) => (
-  <Main text={text} />
-);
+export const App: React.FunctionComponent<AppProps> = ({ text }) => <Main text={text} />

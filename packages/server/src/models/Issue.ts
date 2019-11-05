@@ -8,57 +8,57 @@ import {
   Table,
   ForeignKey,
   Unique,
-  UpdatedAt
-} from "sequelize-typescript";
-import { Field, ObjectType } from "type-graphql";
+  UpdatedAt,
+} from 'sequelize-typescript'
+import { Field, ObjectType } from 'type-graphql'
 
-import Trace from "./Trace";
-import Project from "./Project";
+import Trace from './Trace'
+import Project from './Project'
 
 @ObjectType()
 @Table
 export default class Issue extends Model<Issue> {
-  @Field({ description: "Id of the issue." })
+  @Field({ description: 'Id of the issue.' })
   @PrimaryKey
   @AutoIncrement
   @Column
-  public id!: number;
+  public id!: number
 
-  @Field({ description: "Title of the issue." })
+  @Field({ description: 'Title of the issue.' })
   @Unique
   @Column
-  public title!: string;
+  public title!: string
 
-  @Field({ description: "Body of the issue." })
+  @Field({ description: 'Body of the issue.' })
   @Column
-  public body!: string;
+  public body!: string
 
-  @Field({ description: "Trace of the issue." })
+  @Field({ description: 'Trace of the issue.' })
   @ForeignKey(() => Trace)
   @Column
-  traceId: number;
+  traceId: number
 
   @BelongsTo(() => Trace)
-  trace: Trace;
+  trace: Trace
 
-  @Field({ description: "Project of the issue." })
+  @Field({ description: 'Project of the issue.' })
   @ForeignKey(() => Project)
   @Column
-  projectId: number;
+  projectId: number
 
   @BelongsTo(() => Project)
-  project: Project;
+  project: Project
 
-  @Field({ description: "Url of the issue." })
+  @Field({ description: 'Url of the issue.' })
   @Unique
   @Column
-  public url!: string;
+  public url!: string
 
   @Field()
   @CreatedAt
-  public createdAt!: Date;
+  public createdAt!: Date
 
   @Field()
   @UpdatedAt
-  public updatedAt!: Date;
+  public updatedAt!: Date
 }

@@ -8,55 +8,55 @@ import {
   BelongsToMany,
   Unique,
   UpdatedAt,
-  Scopes
-} from "sequelize-typescript";
-import { Field, ObjectType } from "type-graphql";
+  Scopes,
+} from 'sequelize-typescript'
+import { Field, ObjectType } from 'type-graphql'
 
-import Project from "./Project";
-import Repository from "./Repository";
-import LensComponent from "./LensComponent";
+import Project from './Project'
+import Repository from './Repository'
+import LensComponent from './LensComponent'
 
 @ObjectType()
 @Table
 export default class Lens extends Model<Lens> {
-  @Field({ description: "Id of the lens." })
+  @Field({ description: 'Id of the lens.' })
   @PrimaryKey
   @AutoIncrement
   @Column
-  public id!: number;
+  public id!: number
 
-  @Field({ description: "Title of the lens." })
+  @Field({ description: 'Title of the lens.' })
   @Unique
   @Column
-  public title!: string;
+  public title!: string
 
   @BelongsToMany(() => Project, {
     through: () => LensComponent,
     scope: {
-      component: "project"
+      component: 'project',
     },
-    foreignKey: "lensId",
-    otherKey: "componentId",
-    constraints: false
+    foreignKey: 'lensId',
+    otherKey: 'componentId',
+    constraints: false,
   })
-  projects: Array<Project & { LensComponent: LensComponent }>;
+  projects: Array<Project & { LensComponent: LensComponent }>
 
-  @BelongsToMany(() => Repository{
+  @BelongsToMany(() => Repository, {
     through: () => LensComponent,
     scope: {
-      component: "repository"
+      component: 'repository',
     },
-    foreignKey: "lensId",
-    otherKey: "componentId",
-    constraints: false
+    foreignKey: 'lensId',
+    otherKey: 'componentId',
+    constraints: false,
   })
-  repositories: Array<Repository & { LensComponent: LensComponent }>;
+  repositories: Array<Repository & { LensComponent: LensComponent }>
 
   @Field()
   @CreatedAt
-  public createdAt!: Date;
+  public createdAt!: Date
 
   @Field()
   @UpdatedAt
-  public updatedAt!: Date;
+  public updatedAt!: Date
 }

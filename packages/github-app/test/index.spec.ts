@@ -1,6 +1,6 @@
 // You can import your modules
 // import index from '../src/index'
-import { expect } from "chai";
+import { expect } from 'chai'
 
 // import nock from "nock";
 // // Requiring our app implementation
@@ -55,11 +55,11 @@ import { expect } from "chai";
 //   });
 // });
 
-describe("github-app", () => {
-  it("works", () => {
-    expect(true).to.equal(true);
-  });
-});
+describe('github-app', () => {
+  it('works', () => {
+    expect(true).to.equal(true)
+  })
+})
 // For more information about testing with Jest see:
 // https://facebook.github.io/jest/
 
