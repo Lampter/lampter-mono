@@ -54,7 +54,7 @@ export default class Event extends Model<Event> {
   @Column({
     type: DataType.ENUM(...Object.keys(EventAction)),
   })
-  public relation!: EventAction;
+  public action!: EventAction;
 
   @Field(_ => String, { description: "Payload of the event." })
   @Column(DataType.JSON)

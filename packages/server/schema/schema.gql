@@ -48,7 +48,7 @@ type Event {
   referenceId: Float!
 
   """Action of the event."""
-  relation: String!
+  action: String!
 
   """Payload of the event."""
   payload: String!
