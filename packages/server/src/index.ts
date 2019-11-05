@@ -1,64 +1,26 @@
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
-// import path from "path";
-import { GraphQLScalarType, Kind } from "graphql";
+import path from "path";
 import { db } from "./db";
-import user from "./user";
+import { buildSchema } from "type-graphql";
 
 const PORT = process.env.PORT || 5000;
 const GQLPATH = "/graphql";
 
-const typeDef = gql`
-  type Query {
-    _: Boolean!
-  }
-  type Mutation {
-    _: Boolean!
-  }
-  type PageInfo {
-    hasNextPage: Boolean!
-    hasPrevPage: Boolean!
-    page: Int!
-    offset: Int!
-    limit: Int!
-    count: Int!
-  }
-  scalar Date
-`;
-
-const resolvers = {
-  Date: new GraphQLScalarType({
-    name: "Date",
-    description: "Date custom scalar type",
-    parseValue(value) {
-      return new Date(value); // value from the client
-    },
-    serialize(value) {
-      return value.getTime(); // value sent to the client
-    },
-    parseLiteral(ast) {
-      if (ast.kind === Kind.INT) {
-        return new Date(ast.value); // ast value is always in string format
-      }
-      return null;
-    }
-  })
-};
-
 const main = async () => {
   // Uncomment force: true to reset DB
-  db.sync({
+  await db.sync({
     force: true
   });
 
-  // const schema = await buildSchema({
-  //   authChecker: customAuthChecker,
-  //   emitSchemaFile: path.resolve(__dirname, '..', 'schema', 'schema.gql'),
-  //   // .js instead of .ts because ts will transpile into js
-  //   resolvers: [`${__dirname}/controllers/*.resolver.js`],
-  // });
+  const schema = await buildSchema({
+    // authChecker: customAuthChecker,
+    emitSchemaFile: path.resolve(__dirname, "..", "schema", "schema.gql"),
+    // .js instead of .ts because ts will transpile into js
+    resolvers: [`${__dirname}/resolvers/*.resolver.js`]
+  });
 
   const app = express();
 
@@ -71,8 +33,7 @@ const main = async () => {
       };
       return context;
     },
-    typeDefs: [typeDef],
-    resolvers: [resolvers],
+    schema,
     introspection: true,
     playground: true
   });
