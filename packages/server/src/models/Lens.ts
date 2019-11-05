@@ -30,10 +30,10 @@ export default class Lens extends Model<Lens> {
   @BelongsToMany(() => Project, {
     through: () => Optic,
     scope: {
-      optic: 'project',
+      reference: 'project',
     },
     foreignKey: 'lensId',
-    otherKey: 'opticId',
+    otherKey: 'referenceId',
     constraints: false,
   })
   public projects!: Array<Project & { Optic: Optic }>
@@ -41,10 +41,10 @@ export default class Lens extends Model<Lens> {
   @BelongsToMany(() => Repository, {
     through: () => Optic,
     scope: {
-      optic: 'repository',
+      reference: 'repository',
     },
     foreignKey: 'lensId',
-    otherKey: 'opticId',
+    otherKey: 'referenceId',
     constraints: false,
   })
   public repositories!: Array<Repository & { Optic: Optic }>

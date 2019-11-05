@@ -13,6 +13,25 @@ type Application {
   updatedAt: DateTime!
 }
 
+type Contributer {
+  """Id of the contributer."""
+  id: Float!
+
+  """User of the contributer."""
+  userId: Float!
+
+  """Reference table of the contributer."""
+  reference: String!
+
+  """Reference Id of the contributer."""
+  referenceId: Float!
+
+  """Role of the contributer."""
+  role: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -62,19 +81,19 @@ type Mutation {
 }
 
 type Optic {
-  """Id of the lens."""
+  """Id of the optic."""
   id: Float!
 
-  """Lens of the lens."""
+  """Lens of the optic."""
   lensId: Float!
 
-  """Optic type of the lens."""
-  optic: String!
+  """Reference table of the optic."""
+  reference: String!
 
-  """Optic Id of the lens"""
-  opticId: Float!
+  """Reference Id of the optic."""
+  referenceId: Float!
 
-  """Optic Id of the lens"""
+  """Relation of the optic."""
   relation: String!
   createdAt: DateTime!
   updatedAt: DateTime!

@@ -12,46 +12,48 @@ import {
 } from 'sequelize-typescript'
 import { Field, ObjectType } from 'type-graphql'
 
-import Lens from './Lens'
+import User from './User'
 import Project from './Project'
 import Repository from './Repository'
 
-enum OpticRelation {
-  PRIMARY = 'PRIMARY',
-  DEPENDANT = 'DEPENDANT',
-  INFORMATIONAL = 'INFORMATIONAL',
+enum ContributorRole {
+  AUTHOR = 'AUTHOR',
+  ASSIGNEE = 'ASSIGNEE',
+  REVIEWER = 'REVIEWER',
+  MERGER = 'MERGER',
+  REFERENCED = 'REFERENCED',
 }
 
 @ObjectType()
 @Table
-export default class Optic extends Model<Optic> {
-  @Field({ description: 'Id of the optic.' })
+export default class Contributer extends Model<Contributer> {
+  @Field({ description: 'Id of the contributer.' })
   @PrimaryKey
   @AutoIncrement
   @Column
   public id!: number
 
-  @Field({ description: 'Lens of the optic.' })
-  @ForeignKey(() => Lens)
+  @Field({ description: 'User of the contributer.' })
+  @ForeignKey(() => User)
   @Column
-  public lensId!: number
+  public userId!: number
 
-  @BelongsTo(() => Lens)
-  public lens!: Lens
+  @BelongsTo(() => User)
+  public user!: User
 
-  @Field({ description: 'Reference table of the optic.' })
+  @Field({ description: 'Reference table of the contributer.' })
   @Column
   public reference!: string
 
-  @Field({ description: 'Reference Id of the optic.' })
+  @Field({ description: 'Reference Id of the contributer.' })
   @Column
   public referenceId!: number
 
-  @Field({ description: 'Relation of the optic.' })
+  @Field({ description: 'Role of the contributer.' })
   @Column({
-    type: DataType.ENUM(...Object.keys(OpticRelation)),
+    type: DataType.ENUM(...Object.keys(ContributorRole)),
   })
-  public relation!: OpticRelation
+  public role!: ContributorRole
 
   @BelongsTo(() => Project, { foreignKey: 'referenceId', constraints: false })
   public project!: Project

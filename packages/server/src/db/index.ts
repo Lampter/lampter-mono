@@ -8,9 +8,10 @@ import Application from '../models/Application'
 import Repository from '../models/Repository'
 import Project from '../models/Project'
 import Issue from '../models/Issue'
+import Contributer from '../models/Contributer'
 
 export const db = new Sequelize({
   dialect: 'sqlite',
   storage: './dev.db',
-  models: [User, Lens, Optic, Trace, Application, Repository, Project, Issue],
+  models: [User, Lens, Optic, Trace, Application, Repository, Project, Issue, Contributer],
 })

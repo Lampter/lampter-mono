@@ -5,6 +5,7 @@ import {
   Model,
   PrimaryKey,
   BelongsTo,
+  BelongsToMany,
   Table,
   ForeignKey,
   UpdatedAt,
@@ -14,6 +15,8 @@ import { Field, ObjectType } from 'type-graphql'
 import Trace from './Trace'
 import Project from './Project'
 import Application from './Application'
+import Contributer from './Contributer'
+import User from './User'
 
 @ObjectType()
 @Table
@@ -63,6 +66,17 @@ export default class Issue extends Model<Issue> {
 
   @BelongsTo(() => Application)
   public application!: Application
+
+  @BelongsToMany(() => User, {
+    through: () => Contributer,
+    scope: {
+      reference: 'issue',
+    },
+    foreignKey: 'userId',
+    otherKey: 'referenceId',
+    constraints: false,
+  })
+  public contributors!: Array<User & { Contributer: Contributer }>
 
   @Field()
   @CreatedAt
