@@ -8,16 +8,16 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node_version: [12, 13]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        node_version: [12]
+        os: [ubuntu-latest]
     steps:
-    - uses: actions/checkout@v1
-    - name: Use Node.js ${{ matrix.node_version }}
-      uses: actions/setup-node@v1
-      with:
-        node_version: ${{ matrix.node_version }}
-    - run: npm i -g yarn
-    - run: yarn
-    - run: yarn test
-      env:
-        CI: true
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v1
+        with:
+          node_version: ${{ matrix.node_version }}
+      - run: npm i -g yarn
+      - run: yarn
+      - run: yarn test
+        env:
+          CI: true
