@@ -1,8 +1,6 @@
 import { Context } from "probot";
 import {
-  Author,
-  GithubContributor,
-  ContributorRole,
+  GithubUser,
   GithubRepository,
   PullRequest,
   Review,
@@ -17,6 +15,7 @@ const getRepository = (repo: Webhooks.PayloadRepository): GithubRepository => ({
   originalId: repo.id,
   title: repo.name,
   url: repo.html_url,
+  owner: getUser(repo.owner),
 });
 
 const getLabels = (
@@ -31,32 +30,11 @@ const getLabels = (
       })) as Label[])
     : [];
 
-const getGithubContributor = (
-  author: Author,
-  role: ContributorRole,
-): GithubContributor => ({
-  reference: "repository",
-  referenceId: author.id,
+const getUser = (author: any): GithubUser => ({
+  originalId: author.id,
   login: author.login,
-  role,
+  type: author.type,
 });
-
-const getPRContributors = (
-  pr: Webhooks.WebhookPayloadPullRequestPullRequest,
-): GithubContributor[] => {
-  return [
-    getGithubContributor(pr.user as Author, ContributorRole.PR_AUTHOR),
-    ...pr.assignees.map(author =>
-      getGithubContributor(author as Author, ContributorRole.PR_ASSIGNEE),
-    ),
-    ...pr.requested_reviewers.map(author =>
-      getGithubContributor(
-        author as Author,
-        ContributorRole.PR_REVIEW_REQUESTED,
-      ),
-    ),
-  ];
-};
 
 const getPullRequest = (
   pr: Partial<Webhooks.WebhookPayloadPullRequestPullRequest>,
@@ -76,6 +54,11 @@ const getPullRequest = (
       ref: pr.base.ref,
       sha: pr.base.sha,
     },
+    user: pr.user && getUser(pr.user),
+    assignees: pr.assignees ? pr.assignees.map(author => getUser(author)) : [],
+    requestedReviewers: pr.requested_reviewers
+      ? pr.requested_reviewers.map(author => getUser(author))
+      : [],
     labels: getLabels(pr),
     state: pr.state,
     merged: pr.merged,
@@ -106,7 +89,7 @@ export const getPullRequestPayload = ({
 }: Context<Webhooks.WebhookPayloadPullRequest>): PullRequestPayload => ({
   repository: getRepository(payload.repository),
   pullRequest: getPullRequest(payload.pull_request),
-  contributors: getPRContributors(payload.pull_request),
+  sender: getUser(payload.sender),
 });
 
 export const getPullRequestReviewPayload = ({
@@ -121,8 +104,6 @@ export const getPullRequestReviewPayload = ({
     repository: getRepository(payload.repository),
     pullRequest: getPullRequest(pullRequest),
     review: getReview(payload.review),
-    contributors: [
-      getGithubContributor(payload.review.user, ContributorRole.PR_REVIEW),
-    ],
+    sender: getUser(payload.sender),
   };
 };

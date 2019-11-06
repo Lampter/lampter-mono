@@ -2,25 +2,16 @@ export type WebhookCommon = {
   action?: string;
 };
 
-export type Author = {
-  login: string;
-  id: number;
-  [key: string]: any;
-};
-
-export enum ContributorRole {
-  PR_AUTHOR = "PR_AUTHOR",
-  PR_ASSIGNEE = "PR_ASSIGNEE",
-  PR_REVIEW = "PR_REVIEW",
-  PR_REVIEW_REQUESTED = "PR_REVIEW_REQUESTED",
-  PR_MERGE = "PR_MERGE",
+enum GithubUserType {
+  USER = "USER",
+  ORGANIZATION = "ORGANIZATION",
 }
 
-export interface GithubContributor {
-  reference: "repository";
-  referenceId: number;
+export interface User {
+  applicationId: 1; //GITHUB
+  originalId: number;
   login: string;
-  role: ContributorRole;
+  type: GithubUserType;
 }
 
 export interface PullRequestRef {
@@ -45,6 +36,9 @@ export interface PullRequest {
   head: PullRequestRef;
   base: PullRequestRef;
   labels: Label[];
+  user?: User;
+  assignees: User[];
+  requestedReviewers: User[];
   state: string;
   merged: boolean;
   mergeable: boolean | null;
@@ -72,19 +66,20 @@ export interface GithubRepository {
   originalId: number;
   title: string;
   url: string;
+  owner: User;
 }
 
 export interface PullRequestPayload {
   pullRequest: PullRequest;
   repository: GithubRepository;
-  contributors: GithubContributor[];
+  sender: User;
 }
 
 export interface PullRequestReviewPayload {
   pullRequest: PullRequest;
   repository: GithubRepository;
   review: Review;
-  contributors: GithubContributor[];
+  sender: User;
 }
 
 export interface Event {
