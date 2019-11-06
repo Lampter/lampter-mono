@@ -14,7 +14,7 @@ import { Field, ObjectType } from "type-graphql";
 import PullRequest from "./PullRequest";
 import Issue from "./Issue";
 
-enum EventAction {
+export enum EventAction {
   PULL_REQUEST__ASSIGNED = "PULL_REQUEST__ASSIGNED",
   PULL_REQUEST__CLOSED = "PULL_REQUEST__CLOSED",
   PULL_REQUEST__EDITED = "PULL_REQUEST__EDITED",

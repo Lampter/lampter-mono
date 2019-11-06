@@ -95,6 +95,7 @@ type Lens {
 }
 
 type Mutation {
+  createEvent(applicationId: Float!, action: String!, payload: String!): Event!
   signIn(email: String!, password: String!): Token!
   register(email: String!, password: String!): Token!
 }
