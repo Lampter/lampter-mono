@@ -124,7 +124,7 @@ export = (app: Application) => {
 
       contributors = [
         ...contributors,
-        getGithubContributor(user as Author, ContributorRole.PR_ASSIGNEE),
+        getGithubContributor(user as Author, ContributorRole.PR_AUTHOR),
         ...assignees.map(author =>
           getGithubContributor(author as Author, ContributorRole.PR_ASSIGNEE),
         ),
