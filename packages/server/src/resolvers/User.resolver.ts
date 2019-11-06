@@ -9,7 +9,7 @@ import {
   ArgsType,
   Field,
   Resolver,
-  ObjectType
+  ObjectType,
 } from "type-graphql";
 import User from "../models/User";
 import { IsEmail, Length } from "class-validator";
@@ -41,7 +41,7 @@ export default class UserResolver {
   public async me(@Ctx() ctx: Context) {
     if (ctx.user && ctx.user.role === Role.USER) {
       const user = await User.findOne({
-        where: { id: ctx.user.id }
+        where: { id: ctx.user.id },
       });
       if (!user) {
         throw new Error("User not found");
@@ -55,7 +55,7 @@ export default class UserResolver {
   public async signIn(@Args()
   {
     email,
-    password
+    password,
   }: AuthInputArgs) {
     // Check if the user is valid
     const user = await User.findOne({ where: { email } });
@@ -71,11 +71,11 @@ export default class UserResolver {
     }
     const payload: UserPayLoad = {
       id: user.id,
-      role: Role.USER
+      role: Role.USER,
     };
     // Generate a new token a save it
     const token = jsonwebtoken.sign(payload, process.env.CRYPTO_KEY!, {
-      expiresIn
+      expiresIn,
     });
 
     return { token };
@@ -85,7 +85,7 @@ export default class UserResolver {
   public async register(@Args()
   {
     email,
-    password
+    password,
   }: AuthInputArgs) {
     // Find if there is an existing account
     const user = await User.findOne({ where: { email } });
@@ -98,14 +98,14 @@ export default class UserResolver {
 
     const newUser = await User.create({
       email,
-      password: hashedPassword
+      password: hashedPassword,
     });
     const payload: UserPayLoad = {
       id: newUser.id,
-      role: Role.USER
+      role: Role.USER,
     };
     const token = jsonwebtoken.sign(payload, process.env.CRYPTO_KEY!, {
-      expiresIn
+      expiresIn,
     });
     return { token };
   }

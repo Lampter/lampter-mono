@@ -13,10 +13,76 @@ type Application {
   updatedAt: DateTime!
 }
 
+type Contributer {
+  """Id of the contributer."""
+  id: Float!
+
+  """User of the contributer."""
+  userId: Float!
+
+  """Reference table of the contributer."""
+  reference: String!
+
+  """Reference Id of the contributer."""
+  referenceId: Float!
+
+  """Role of the contributer."""
+  role: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+type Event {
+  """Id of the event."""
+  id: Float!
+
+  """Reference table of the event."""
+  reference: String!
+
+  """Reference Id of the event."""
+  referenceId: Float!
+
+  """Action of the event."""
+  action: String!
+
+  """Payload of the event."""
+  payload: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Issue {
+  """Id of the issue."""
+  id: Float!
+
+  """Original Id of the Issue in it's application."""
+  originalId: String!
+
+  """Title of the issue."""
+  title: String!
+
+  """Body of the issue."""
+  body: String!
+
+  """Url of the issue."""
+  url: String!
+
+  """Trace of the issue."""
+  traceId: Float!
+
+  """Project of the issue."""
+  projectId: Float!
+
+  """Application of the issue."""
+  applicationId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 type Lens {
   """Id of the lens."""
@@ -28,28 +94,28 @@ type Lens {
   updatedAt: DateTime!
 }
 
-type LensComponent {
-  """Id of the lens."""
-  id: Float!
-
-  """Lens of the lens."""
-  lensId: Float!
-
-  """Component type of the lens."""
-  component: String!
-
-  """Component Id of the lens"""
-  componentId: Float!
-
-  """Component Id of the lens"""
-  relation: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type Mutation {
   signIn(email: String!, password: String!): Token!
   register(email: String!, password: String!): Token!
+}
+
+type Optic {
+  """Id of the optic."""
+  id: Float!
+
+  """Lens of the optic."""
+  lensId: Float!
+
+  """Reference table of the optic."""
+  reference: String!
+
+  """Reference Id of the optic."""
+  referenceId: Float!
+
+  """Relation of the optic."""
+  relation: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Project {
@@ -66,6 +132,73 @@ type Project {
   url: String!
 
   """Application of the project."""
+  applicationId: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PullRequest {
+  """Id of the pull request."""
+  id: Float!
+
+  """Original Id of the pull request in it's application."""
+  originalId: String!
+
+  """Title of the pull request."""
+  title: String!
+
+  """Body of the pull request."""
+  body: String!
+
+  """Commit count of the pull request."""
+  commits: Float!
+
+  """Comment count of the pull request."""
+  comments: Float!
+
+  """Review comment count of the pull request."""
+  reviewComments: Float!
+
+  """head of the pull request."""
+  head: String!
+
+  """base of the pull request."""
+  base: String!
+
+  """labels of the pull request."""
+  labels: String!
+
+  """State of the pull request."""
+  state: String!
+
+  """Is the pull request merged?."""
+  merged: Boolean!
+
+  """Is the pull request mergeable?."""
+  mergeable: Boolean!
+
+  """Is the pull request rebaseable?."""
+  rebaseable: Boolean!
+
+  """Mergeable state of the pull request."""
+  mergeableState: String!
+
+  """Url of the pull request."""
+  url: String!
+
+  """Diff Url of the pull request."""
+  diffUrl: String!
+
+  """Patch Url of the pull request."""
+  patchUrl: String!
+
+  """Trace of the pull request."""
+  traceId: Float!
+
+  """Repository of the pull request."""
+  repositoryId: Float!
+
+  """Application of the pull request."""
   applicationId: Float!
   createdAt: DateTime!
   updatedAt: DateTime!

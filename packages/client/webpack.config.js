@@ -10,33 +10,33 @@ module.exports = {
   context: monorepoRoot,
   entry: join(__dirname, "src", "client-bootstrap"),
   output: {
-    path: join(__dirname, "umd")
+    path: join(__dirname, "umd"),
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        loader: "@ts-tools/webpack-loader"
+        loader: "@ts-tools/webpack-loader",
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader"]
-      }
-    ]
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+    ],
   },
   resolve: {
     extensions: [".ts", ".tsx", ".mjs", ".js", ".json"],
     plugins: [
       new TsconfigPathsPlugin({
-        configFile: join(monorepoRoot, "tsconfig.json")
-      })
-    ]
+        configFile: join(monorepoRoot, "tsconfig.json"),
+      }),
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({ title: "lampter Monorepo App" }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
-      chunkFilename: "[name].css"
-    })
-  ]
+      chunkFilename: "[name].css",
+    }),
+  ],
 };

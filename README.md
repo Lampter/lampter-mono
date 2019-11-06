@@ -41,11 +41,19 @@ lampter monorepo setup with yarn workspaces, typescript, and lerna.
     -   [React](https://github.com/facebook/react) application.
     -   Uses the `@lampter/components` package (also inside monorepo).
     -   Built as `cjs` (Node consumption) and `umd` (browser consumption).
+  
+-   **@lampter/github-app**
+    -   [Protobot](https://probot.github.io/docs/) application.
+    -   Listens on http://localhost:3000
+    -   Uses smee.io webProxy 
+    -   Installed on the Lampter Org
+    -   Built as `cjs` (Node consumption).
 
 -   **@lampter/server**
-    -   [Express](https://github.com/expressjs/express) application.
-    -   Uses the `@lampter/client` package (also inside monorepo).
-    -   Listens on http://localhost:3000 (client only rendering) http://localhost:3000/server (SSR rendering).
+    -   [Express](https://github.com/expressjs/express) & [Apollo-Server-Express](https://github.com/apollographql/apollo-server/tree/master/packages/apollo-server-express) application.
+    -   [Sequelize-Typescript](https://github.com/RobinBuschmann/sequelize-typescript) ORM
+    -   [Type-Graphql](https://github.com/MichalLytek/type-graphql) Resolver and Autogen Schema.gql
+    -   Listens on http://localhost:5000
     -   Built as `cjs` (Node consumption).
 
 ### Basic structure and configurations

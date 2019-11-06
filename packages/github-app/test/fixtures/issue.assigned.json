@@ -1,6 +1,5 @@
-
 {
-  "action": "opened",
+  "action": "assigned",
   "issue": {
     "url": "https://api.github.com/repos/Lampter/lampter-mono/issues/3",
     "repository_url": "https://api.github.com/repos/Lampter/lampter-mono",
@@ -11,7 +10,7 @@
     "id": 518079641,
     "node_id": "MDU6SXNzdWU1MTgwNzk2NDE=",
     "number": 3,
-    "title": "LOL",
+    "title": "LOL ",
     "user": {
       "login": "nathanyapi",
       "id": 8998229,
@@ -39,15 +38,54 @@
     "locked": false,
     "assignee": null,
     "assignees": [
-
+      {
+        "login": "nathanyapi",
+        "id": 8998229,
+        "node_id": "MDQ6VXNlcjg5OTgyMjk=",
+        "avatar_url": "https://avatars1.githubusercontent.com/u/8998229?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/nathanyapi",
+        "html_url": "https://github.com/nathanyapi",
+        "followers_url": "https://api.github.com/users/nathanyapi/followers",
+        "following_url": "https://api.github.com/users/nathanyapi/following{/other_user}",
+        "gists_url": "https://api.github.com/users/nathanyapi/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/nathanyapi/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/nathanyapi/subscriptions",
+        "organizations_url": "https://api.github.com/users/nathanyapi/orgs",
+        "repos_url": "https://api.github.com/users/nathanyapi/repos",
+        "events_url": "https://api.github.com/users/nathanyapi/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/nathanyapi/received_events",
+        "type": "User",
+        "site_admin": false
+      }
     ],
     "milestone": null,
-    "comments": 0,
+    "comments": 1,
     "created_at": "2019-11-05T22:10:39Z",
-    "updated_at": "2019-11-05T22:10:39Z",
+    "updated_at": "2019-11-05T22:14:20Z",
     "closed_at": null,
     "author_association": "NONE",
-    "body": "LOLOOLOL"
+    "body": "@nathanyapipro "
+  },
+  "assignee": {
+    "login": "nathanyapi",
+    "id": 8998229,
+    "node_id": "MDQ6VXNlcjg5OTgyMjk=",
+    "avatar_url": "https://avatars1.githubusercontent.com/u/8998229?v=4",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/nathanyapi",
+    "html_url": "https://github.com/nathanyapi",
+    "followers_url": "https://api.github.com/users/nathanyapi/followers",
+    "following_url": "https://api.github.com/users/nathanyapi/following{/other_user}",
+    "gists_url": "https://api.github.com/users/nathanyapi/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/nathanyapi/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/nathanyapi/subscriptions",
+    "organizations_url": "https://api.github.com/users/nathanyapi/orgs",
+    "repos_url": "https://api.github.com/users/nathanyapi/repos",
+    "events_url": "https://api.github.com/users/nathanyapi/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/nathanyapi/received_events",
+    "type": "User",
+    "site_admin": false
   },
   "repository": {
     "id": 219567295,

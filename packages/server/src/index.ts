@@ -15,14 +15,15 @@ const GQLPATH = "/graphql";
 const main = async () => {
   // Uncomment force: true to reset DB
   await db.sync({
-    force: true
+    // force: true,
+    alter: true,
   });
 
   const schema = await buildSchema({
     authChecker: customAuthChecker,
     emitSchemaFile: path.resolve(__dirname, "..", "schema", "schema.gql"),
     // .js instead of .ts because ts will transpile into js
-    resolvers: [`${__dirname}/resolvers/*.resolver.js`]
+    resolvers: [`${__dirname}/resolvers/*.resolver.js`],
   });
 
   const app = express();
@@ -32,21 +33,21 @@ const main = async () => {
       const context = {
         req,
         db,
-        user: req.user // `req.user` comes from `express-jwt`
+        user: req.user, // `req.user` comes from `express-jwt`
       };
       return context;
     },
     schema,
     introspection: true,
-    playground: true
+    playground: true,
   });
 
   app.use(
     GQLPATH,
     expressJwt({
       credentialsRequired: false,
-      secret: process.env.CRYPTO_KEY!
-    })
+      secret: process.env.CRYPTO_KEY!,
+    }),
   );
 
   server.applyMiddleware({ app, path: GQLPATH });
@@ -55,7 +56,7 @@ const main = async () => {
     cors({
       // Add whitelist here
       // origin: ["http://localhost:8080", "http://localhost:3000"]
-    })
+    }),
   );
 
   app.use(bodyParser.json()); // support json encoded bodies

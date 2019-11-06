@@ -7,8 +7,7 @@ import {
   ForeignKey,
   BelongsTo,
   Table,
-  Unique,
-  UpdatedAt
+  UpdatedAt,
 } from "sequelize-typescript";
 import { Field, ObjectType } from "type-graphql";
 
@@ -24,27 +23,24 @@ export default class Project extends Model<Project> {
   public id!: number;
 
   @Field({ description: "Original Id of the project in it's application." })
-  @Unique
   @Column
   public originalId!: string;
 
   @Field({ description: "Title of the project." })
-  @Unique
   @Column
   public title!: string;
 
   @Field({ description: "Url of the project." })
-  @Unique
   @Column
   public url!: string;
 
   @Field({ description: "Application of the project." })
   @ForeignKey(() => Application)
   @Column
-  applicationId: number;
+  public applicationId!: number;
 
   @BelongsTo(() => Application)
-  application: Application;
+  public application!: Application;
 
   @Field()
   @CreatedAt

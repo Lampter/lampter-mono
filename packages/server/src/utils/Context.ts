@@ -1,6 +1,6 @@
 export enum Role {
   USER = "USER",
-  ADMIN = "ADMIN"
+  ADMIN = "ADMIN",
 }
 
 export interface AdminPayLoad {

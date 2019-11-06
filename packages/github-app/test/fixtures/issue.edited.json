@@ -1,6 +1,5 @@
-
 {
-  "action": "opened",
+  "action": "edited",
   "issue": {
     "url": "https://api.github.com/repos/Lampter/lampter-mono/issues/3",
     "repository_url": "https://api.github.com/repos/Lampter/lampter-mono",
@@ -44,10 +43,15 @@
     "milestone": null,
     "comments": 0,
     "created_at": "2019-11-05T22:10:39Z",
-    "updated_at": "2019-11-05T22:10:39Z",
+    "updated_at": "2019-11-05T22:10:52Z",
     "closed_at": null,
     "author_association": "NONE",
-    "body": "LOLOOLOL"
+    "body": "Dammm"
+  },
+  "changes": {
+    "body": {
+      "from": "LOLOOLOL"
+    }
   },
   "repository": {
     "id": 219567295,
