@@ -5,23 +5,19 @@ type WebhookCommon = {
   action?: string;
 };
 
-interface Link {
-  reference: string;
+enum ContributorRole {
+  PR_AUTHOR = "PR_AUTHOR",
+  PR_ASSIGNEE = "PR_ASSIGNEE",
+  PR_REVIEW = "PR_REVIEW",
+  PR_REVIEW_REQUESTED = "PR_REVIEW_REQUESTED",
+  PR_MERGE = "PR_MERGE",
+}
+
+interface GithubContributor {
+  reference: "repository",
   referenceId: number;
-  label: string;
-  url: string;
-}
-
-interface User {
-  id: string;
-  login: number;
-  type: string;
-}
-
-interface Label {
-  id: number;
-  name: string;
-  color: string;
+  login: string;
+  role: ContributorRole;
 }
 
 interface PullRequestRef {
@@ -31,73 +27,60 @@ interface PullRequestRef {
 }
 
 interface PullRequest {
-  id: number;
-  url: string;
+  applicationId: 1; //GITHUB
+  originalId: number;
   title: string;
   body: string;
-  state: string;
-  locked: boolean;
-  links: number[]; //PR_URL,DIFF_URL,PATCH_URL
-  author: number;
-  assignee: number; // User
-  assignees: number[]; // Users
-  requestedReviewers: number[]; // Users
-  requestedTeams: number[]; // Users
-  labels: number[]; // Labels
-  milestone: any;
   head: PullRequestRef;
   base: PullRequestRef;
-  authorAssociation: string;
-  draft: boolean;
+  state: string;
   merged: boolean;
-  mergeable: boolean;
-  rebaseable: boolean;
+  mergeable: boolean | null;
+  rebaseable: boolean | null;
   mergeableState: string;
-  mergedBy?: number;
+  url: string;
+  diffUrl: string;
+  patchUrl: string;
+  commits: number;
   comments: number;
   reviewComments: number;
-  maintainerCanModify: boolean;
-  commits: number;
-  additions: number;
-  deletions: number;
-  changedFiles: number;
 }
 
-interface Repository {
-  id: number;
-  name: string;
-  fullName: string;
-  description: string;
-  links: number[]; //REPO_URL
-  owner: number;
+interface GithubRepository {
+  applicationId: 1, // GITHUB
+  originalId: number;
+  title: string;
+  url: string,
 }
-
-interface RecordContentPR {
-  pullRequest: PullRequest;
-  repository: Repository;
-  labels: Label[];
-  users: User[];
-  links: Link[];
-}
-
 // @ts-ignore
-interface Record {
-  githubId: string;
+interface PullRequestPayload {
+  pullRequest: PullRequest;
+  repository: GithubRepository;
+  contributors: GithubContributor[];
+}
+
+
+interface Event {
+  applicationId: 1, // GITHUB
+  originalId: string;
   name: string;
   action: string;
-  content: RecordContentPR | { [key: string]: any }; // add the other event structures here
+  payload: PullRequestPayload | any // add the other event structures here
 }
 
 // @ts-ignore
 export = (app: Application) => {
+  let event:Partial<Event> = {applicationId: 1}
   app.on(`*`, async (context: Context<WebhookCommon>) => {
     const {
-      id: githubId,
+      id: originalId,
       name,
       payload: { action },
     } = context;
 
-    app.log(`${githubId} - ${name}${action && `.${action}`}`);
+    event = {...event, originalId, name, action}
+
+    app.log(`${originalId} - ${name}${action && `.${action}`}`);
   });
 
   app.on(
@@ -115,8 +98,49 @@ export = (app: Application) => {
       "pull_request.unlabeled",
       "pull_request.synchronize",
     ],
-    async (_: Context<Webhooks.WebhookPayloadPullRequest>) => {
+    async (context: Context<Webhooks.WebhookPayloadPullRequest>) => {
       // TODO: Pull Request Data Formating
+      const {pull_request, repository, sender} = context.payload
+
+      const payload: Partial<PullRequestPayload> = {
+        repository: {
+          applicationId: 1, // GITHUB
+          originalId: repository.id,
+          title: repository.name,
+          url: repository.html_url
+        },
+        pullRequest: {
+          applicationId: 1, //GITHUB
+          originalId: pull_request.id,
+          title: pull_request.title,
+          body: pull_request.body,
+          head: {
+            label: pull_request.head.label,
+            ref: pull_request.head.ref,
+            sha: pull_request.head.sha,
+          },
+          base: {
+            label: pull_request.base.label,
+            ref: pull_request.base.ref,
+            sha: pull_request.base.sha,
+          },
+          state: pull_request.state,
+          merged: pull_request.merged,
+          mergeable: pull_request.mergeable,
+          rebaseable: pull_request.rebaseable,
+          mergeableState: pull_request.mergeable_state,
+          url: pull_request.html_url,
+          diffUrl: pull_request.diff_url,
+          patchUrl: pull_request.patch_url,
+          commits: pull_request.commits,
+          comments: pull_request.comments,
+          reviewComments: pull_request.review_comments,
+        },
+      }
+
+      event = {...event, payload}
+
+      app.log(event)
     },
   );
   app.on(

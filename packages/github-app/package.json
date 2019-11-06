@@ -7,8 +7,10 @@
         "clean": "rimraf ./cjs",
         "prebuild": "yarn clean",
         "build": "tsc -p tsconfig.build.json",
-        "dev": "nodemon --exec \"npm start\"",
-        "start": "probot run ./cjs/index.js",
+        "dev": "probot run ./cjs/index.js",
+        "watch-node": "nodemon --exec \"yarn dev\"",
+        "watch-ts": "tsc -p tsconfig.build.json -w",
+        "start": "concurrently 'yarn watch-ts' 'yarn watch-node'",
         "test": "jest && standard **/*.ts",
         "test:watch": "jest --watch --notify --notifyMode=change --coverage"
     },
