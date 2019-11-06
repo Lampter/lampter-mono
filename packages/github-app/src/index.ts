@@ -1,6 +1,6 @@
 import { Application, Context } from "probot"; // eslint-disable-line no-unused-vars
 import Webhooks from "@octokit/webhooks";
-import { Event, WebhookCommon } from "./types/models";
+import { WebhookCommon } from "./types/models";
 import { getEventBase } from "./helpers/event";
 import { getPullRequestPayload } from "./helpers/pullRequest";
 
