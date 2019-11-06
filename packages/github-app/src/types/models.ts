@@ -7,7 +7,7 @@ enum GithubUserType {
   ORGANIZATION = "ORGANIZATION",
 }
 
-export interface User {
+export interface GithubUser {
   applicationId: 1; //GITHUB
   originalId: number;
   login: string;
@@ -28,17 +28,18 @@ export interface Label {
   [key: string]: any;
 }
 
-export interface PullRequest {
+export interface GithubPullRequest {
   applicationId: 1; //GITHUB
   originalId: number;
+  repository: GithubRepository;
   title: string;
   body: string;
   head: PullRequestRef;
   base: PullRequestRef;
   labels: Label[];
-  user?: User;
-  assignees: User[];
-  requestedReviewers: User[];
+  user: GithubUser;
+  assignees: GithubUser[];
+  requestedReviewers: GithubUser[];
   state: string;
   merged: boolean;
   mergeable: boolean | null;
@@ -52,10 +53,17 @@ export interface PullRequest {
   reviewComments: number;
 }
 
-export interface Review {
+type GithubReviewPullRequest = Pick<
+  GithubPullRequest,
+  "applicationId" | "originalId" | "title" | "body" | "user" | "url"
+>;
+
+export interface GithubReview {
   applicationId: 1; //GITHUB
   originalId: number;
+  body: string;
   commitId: string;
+  pullRequest: GithubReviewPullRequest;
   submittedAt: string;
   state: string;
   url: string;
@@ -66,20 +74,17 @@ export interface GithubRepository {
   originalId: number;
   title: string;
   url: string;
-  owner: User;
+  owner: GithubUser;
 }
 
 export interface PullRequestPayload {
-  pullRequest: PullRequest;
-  repository: GithubRepository;
-  sender: User;
+  pullRequest: GithubPullRequest;
+  sender: GithubUser;
 }
 
 export interface PullRequestReviewPayload {
-  pullRequest: PullRequest;
-  repository: GithubRepository;
-  review: Review;
-  sender: User;
+  review: GithubReview;
+  sender: GithubUser;
 }
 
 export interface Event {

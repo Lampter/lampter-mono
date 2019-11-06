@@ -2,8 +2,8 @@ import { Context } from "probot";
 import {
   GithubUser,
   GithubRepository,
-  PullRequest,
-  Review,
+  GithubPullRequest,
+  GithubReview,
   Label,
   PullRequestPayload,
   PullRequestReviewPayload,
@@ -19,7 +19,7 @@ const getRepository = (repo: Webhooks.PayloadRepository): GithubRepository => ({
 });
 
 const getLabels = (
-  pr: Partial<Webhooks.WebhookPayloadPullRequestPullRequest>,
+  pr: Webhooks.WebhookPayloadPullRequestPullRequest,
 ): Label[] =>
   pr.labels
     ? (pr.labels.map(label => ({
@@ -31,53 +31,65 @@ const getLabels = (
     : [];
 
 const getUser = (author: any): GithubUser => ({
+  applicationId: 1, //GITHUB
   originalId: author.id,
   login: author.login,
   type: author.type,
 });
 
-const getPullRequest = (
-  pr: Partial<Webhooks.WebhookPayloadPullRequestPullRequest>,
-): PullRequest =>
-  ({
-    applicationId: 1, //GITHUB
+const getPullRequest = ({
+  pull_request: pr,
+  repository,
+}: Webhooks.WebhookPayloadPullRequest): GithubPullRequest => ({
+  applicationId: 1, //GITHUB
+  originalId: pr.id,
+  title: pr.title,
+  body: pr.body,
+  head: pr.head && {
+    label: pr.head.label,
+    ref: pr.head.ref,
+    sha: pr.head.sha,
+  },
+  base: pr.base && {
+    label: pr.base.label,
+    ref: pr.base.ref,
+    sha: pr.base.sha,
+  },
+  repository: getRepository(repository),
+  user: getUser(pr.user),
+  assignees: pr.assignees ? pr.assignees.map(author => getUser(author)) : [],
+  requestedReviewers: pr.requested_reviewers
+    ? pr.requested_reviewers.map(author => getUser(author))
+    : [],
+  labels: getLabels(pr),
+  state: pr.state,
+  merged: pr.merged,
+  mergeable: pr.mergeable,
+  rebaseable: pr.rebaseable,
+  mergeableState: pr.mergeable_state,
+  url: pr.html_url,
+  diffUrl: pr.diff_url,
+  patchUrl: pr.patch_url,
+  commits: pr.commits,
+  comments: pr.comments,
+  reviewComments: pr.review_comments,
+});
+
+const getReview = ({
+  review: rw,
+  pull_request: pr,
+}: Webhooks.WebhookPayloadPullRequestReview): GithubReview => ({
+  applicationId: 1, //GITHUB
+  body: `${rw.body}`,
+  originalId: rw.id,
+  pullRequest: {
+    applicationId: 1,
     originalId: pr.id,
     title: pr.title,
     body: pr.body,
-    head: pr.head && {
-      label: pr.head.label,
-      ref: pr.head.ref,
-      sha: pr.head.sha,
-    },
-    base: pr.base && {
-      label: pr.base.label,
-      ref: pr.base.ref,
-      sha: pr.base.sha,
-    },
-    user: pr.user && getUser(pr.user),
-    assignees: pr.assignees ? pr.assignees.map(author => getUser(author)) : [],
-    requestedReviewers: pr.requested_reviewers
-      ? pr.requested_reviewers.map(author => getUser(author))
-      : [],
-    labels: getLabels(pr),
-    state: pr.state,
-    merged: pr.merged,
-    mergeable: pr.mergeable,
-    rebaseable: pr.rebaseable,
-    mergeableState: pr.mergeable_state,
+    user: getUser(pr.user),
     url: pr.html_url,
-    diffUrl: pr.diff_url,
-    patchUrl: pr.patch_url,
-    commits: pr.commits,
-    comments: pr.comments,
-    reviewComments: pr.review_comments,
-  } as PullRequest);
-
-const getReview = (
-  rw: Webhooks.WebhookPayloadPullRequestReviewReview,
-): Review => ({
-  applicationId: 1, //GITHUB
-  originalId: rw.id,
+  },
   commitId: rw.commit_id,
   submittedAt: rw.submitted_at,
   state: rw.state,
@@ -87,8 +99,7 @@ const getReview = (
 export const getPullRequestPayload = ({
   payload,
 }: Context<Webhooks.WebhookPayloadPullRequest>): PullRequestPayload => ({
-  repository: getRepository(payload.repository),
-  pullRequest: getPullRequest(payload.pull_request),
+  pullRequest: getPullRequest(payload),
   sender: getUser(payload.sender),
 });
 
@@ -97,13 +108,8 @@ export const getPullRequestReviewPayload = ({
 }: Context<
   Webhooks.WebhookPayloadPullRequestReview
 >): PullRequestReviewPayload => {
-  const pullRequest: Partial<
-    Webhooks.WebhookPayloadPullRequestPullRequest
-  > = payload.pull_request as any;
   return {
-    repository: getRepository(payload.repository),
-    pullRequest: getPullRequest(pullRequest),
-    review: getReview(payload.review),
+    review: getReview(payload),
     sender: getUser(payload.sender),
   };
 };
