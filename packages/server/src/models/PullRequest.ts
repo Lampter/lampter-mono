@@ -46,6 +46,14 @@ export default class PullRequest extends Model<PullRequest> {
   @Column
   public commits!: number;
 
+  @Field({ description: "Comment count of the pull request." })
+  @Column
+  public comments!: number;
+
+  @Field({ description: "Review comment count of the pull request." })
+  @Column
+  public reviewComments!: number;
+
   @Field(_ => String, { description: "head of the pull request." })
   @Column(DataType.JSON)
   public head!: string;
@@ -53,6 +61,10 @@ export default class PullRequest extends Model<PullRequest> {
   @Field(_ => String, { description: "base of the pull request." })
   @Column(DataType.JSON)
   public base!: string;
+
+  @Field(_ => String, { description: "labels of the pull request." })
+  @Column(DataType.JSON)
+  public labels!: string;
 
   @Field({ description: "State of the pull request." })
   @Column

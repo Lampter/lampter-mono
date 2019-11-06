@@ -18,7 +18,6 @@ describe("My Probot app", () => {
   let mockCert: string;
 
   beforeAll((done: Function) => {
-    
     fs.readFile(
       path.join(__dirname, "fixtures/mock-cert.pem"),
       // @ts-ignore

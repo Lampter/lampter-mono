@@ -1,94 +1,18 @@
 import { Application, Context } from "probot"; // eslint-disable-line no-unused-vars
 import Webhooks from "@octokit/webhooks";
-
-type WebhookCommon = {
-  action?: string;
-};
-
-enum ContributorRole {
-  PR_AUTHOR = "PR_AUTHOR",
-  PR_ASSIGNEE = "PR_ASSIGNEE",
-  PR_REVIEW = "PR_REVIEW",
-  PR_REVIEW_REQUESTED = "PR_REVIEW_REQUESTED",
-  PR_MERGE = "PR_MERGE",
-}
-
-interface GithubContributor {
-  reference: "repository";
-  referenceId: number;
-  login: string;
-  role: ContributorRole;
-}
-
-interface PullRequestRef {
-  label: string;
-  ref: string;
-  sha: string;
-}
-
-interface Label {
-  applicationId: 1; //GITHUB
-  originalId: number;
-  name: string;
-  color: string;
-  [key: string]: any;
-}
-
-interface PullRequest {
-  applicationId: 1; //GITHUB
-  originalId: number;
-  title: string;
-  body: string;
-  head: PullRequestRef;
-  base: PullRequestRef;
-  labels: Label[];
-  state: string;
-  merged: boolean;
-  mergeable: boolean | null;
-  rebaseable: boolean | null;
-  mergeableState: string;
-  url: string;
-  diffUrl: string;
-  patchUrl: string;
-  commits: number;
-  comments: number;
-  reviewComments: number;
-}
-
-interface GithubRepository {
-  applicationId: 1; // GITHUB
-  originalId: number;
-  title: string;
-  url: string;
-}
-// @ts-ignore
-interface PullRequestPayload {
-  pullRequest: PullRequest;
-  repository: GithubRepository;
-  contributors: GithubContributor[];
-}
-
-interface Event {
-  applicationId: 1; // GITHUB
-  originalId: string;
-  name: string;
-  action: string;
-  payload: PullRequestPayload | any; // add the other event structures here
-}
+import { Event, WebhookCommon } from "./types/models";
+import { getEventBase } from "./helpers/event";
+import { getPullRequestPayload } from "./helpers/pullRequest";
 
 // @ts-ignore
 export = (app: Application) => {
-  let event: Partial<Event> = { applicationId: 1 };
   app.on(`*`, async (context: Context<WebhookCommon>) => {
-    const {
-      id: originalId,
-      name,
-      payload: { action },
-    } = context;
+    const event = getEventBase(context);
 
-    event = { ...event, originalId, name, action };
-
-    app.log(`${originalId} - ${name}${action && `.${action}`}`);
+    app.log(
+      `${event.originalId} - ${event.name}${event.action &&
+        `.${event.action}`}`,
+    );
   });
 
   app.on(
@@ -112,83 +36,9 @@ export = (app: Application) => {
       >,
     ) => {
       // TODO: Pull Request Data Formating
-      const { pull_request, repository, sender } = context.payload;
+      let event = getEventBase(context);
 
-      let contributors: GithubContributor[] = [];
-      const { user, assignees, requested_reviewers } = pull_request;
-      type Author = {
-        login: string;
-        id: number;
-        [key: string]: any;
-      };
-      const getGithubContributor = (
-        author: Author,
-        role: ContributorRole,
-      ): GithubContributor => ({
-        reference: "repository",
-        referenceId: author.id,
-        login: author.login,
-        role,
-      });
-
-      contributors = [
-        ...contributors,
-        getGithubContributor(user as Author, ContributorRole.PR_AUTHOR),
-        ...assignees.map(author =>
-          getGithubContributor(author as Author, ContributorRole.PR_ASSIGNEE),
-        ),
-        ...requested_reviewers.map(author =>
-          getGithubContributor(
-            author as Author,
-            ContributorRole.PR_REVIEW_REQUESTED,
-          ),
-        ),
-      ];
-
-      const labels = pull_request.labels.map(label => ({
-        applicationId: 1,
-        originalId: label.id,
-        name: label.name,
-        color: label.color,
-      })) as Label[];
-
-      const payload: Partial<PullRequestPayload> = {
-        repository: {
-          applicationId: 1, // GITHUB
-          originalId: repository.id,
-          title: repository.name,
-          url: repository.html_url,
-        },
-        pullRequest: {
-          applicationId: 1, //GITHUB
-          originalId: pull_request.id,
-          title: pull_request.title,
-          body: pull_request.body,
-          head: {
-            label: pull_request.head.label,
-            ref: pull_request.head.ref,
-            sha: pull_request.head.sha,
-          },
-          base: {
-            label: pull_request.base.label,
-            ref: pull_request.base.ref,
-            sha: pull_request.base.sha,
-          },
-          labels,
-          state: pull_request.state,
-          merged: pull_request.merged,
-          mergeable: pull_request.mergeable,
-          rebaseable: pull_request.rebaseable,
-          mergeableState: pull_request.mergeable_state,
-          url: pull_request.html_url,
-          diffUrl: pull_request.diff_url,
-          patchUrl: pull_request.patch_url,
-          commits: pull_request.commits,
-          comments: pull_request.comments,
-          reviewComments: pull_request.review_comments,
-        },
-        contributors,
-      };
+      const payload = getPullRequestPayload(context);
 
       event = { ...event, payload };
 

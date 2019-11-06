@@ -153,11 +153,20 @@ type PullRequest {
   """Commit count of the pull request."""
   commits: Float!
 
+  """Comment count of the pull request."""
+  comments: Float!
+
+  """Review comment count of the pull request."""
+  reviewComments: Float!
+
   """head of the pull request."""
   head: String!
 
   """base of the pull request."""
   base: String!
+
+  """labels of the pull request."""
+  labels: String!
 
   """State of the pull request."""
   state: String!
