@@ -14,7 +14,7 @@ enum ContributorRole {
 }
 
 interface GithubContributor {
-  reference: "repository",
+  reference: "repository";
   referenceId: number;
   login: string;
   role: ContributorRole;
@@ -47,10 +47,10 @@ interface PullRequest {
 }
 
 interface GithubRepository {
-  applicationId: 1, // GITHUB
+  applicationId: 1; // GITHUB
   originalId: number;
   title: string;
-  url: string,
+  url: string;
 }
 // @ts-ignore
 interface PullRequestPayload {
@@ -59,18 +59,17 @@ interface PullRequestPayload {
   contributors: GithubContributor[];
 }
 
-
 interface Event {
-  applicationId: 1, // GITHUB
+  applicationId: 1; // GITHUB
   originalId: string;
   name: string;
   action: string;
-  payload: PullRequestPayload | any // add the other event structures here
+  payload: PullRequestPayload | any; // add the other event structures here
 }
 
 // @ts-ignore
 export = (app: Application) => {
-  let event:Partial<Event> = {applicationId: 1}
+  let event: Partial<Event> = { applicationId: 1 };
   app.on(`*`, async (context: Context<WebhookCommon>) => {
     const {
       id: originalId,
@@ -78,7 +77,7 @@ export = (app: Application) => {
       payload: { action },
     } = context;
 
-    event = {...event, originalId, name, action}
+    event = { ...event, originalId, name, action };
 
     app.log(`${originalId} - ${name}${action && `.${action}`}`);
   });
@@ -98,16 +97,51 @@ export = (app: Application) => {
       "pull_request.unlabeled",
       "pull_request.synchronize",
     ],
-    async (context: Context<Webhooks.WebhookPayloadPullRequest & {[key:string]: any}>) => {
+    async (
+      context: Context<
+        Webhooks.WebhookPayloadPullRequest & { [key: string]: any }
+      >,
+    ) => {
       // TODO: Pull Request Data Formating
-      const {pull_request, repository, sender} = context.payload
+      const { pull_request, repository, sender } = context.payload;
+
+      let contributors: GithubContributor[] = [];
+      const { user, assignees, requested_reviewers } = pull_request;
+      type Author = {
+        login: string;
+        id: number;
+        [key: string]: any;
+      };
+      const getGithubContributor = (
+        author: Author,
+        role: ContributorRole,
+      ): GithubContributor => ({
+        reference: "repository",
+        referenceId: author.id,
+        login: author.login,
+        role,
+      });
+
+      contributors = [
+        ...contributors,
+        getGithubContributor(user as Author, ContributorRole.PR_ASSIGNEE),
+        ...assignees.map(author =>
+          getGithubContributor(author as Author, ContributorRole.PR_ASSIGNEE),
+        ),
+        ...requested_reviewers.map(author =>
+          getGithubContributor(
+            author as Author,
+            ContributorRole.PR_REVIEW_REQUESTED,
+          ),
+        ),
+      ];
 
       const payload: Partial<PullRequestPayload> = {
         repository: {
           applicationId: 1, // GITHUB
           originalId: repository.id,
           title: repository.name,
-          url: repository.html_url
+          url: repository.html_url,
         },
         pullRequest: {
           applicationId: 1, //GITHUB
@@ -136,11 +170,12 @@ export = (app: Application) => {
           comments: pull_request.comments,
           reviewComments: pull_request.review_comments,
         },
-      }
+        contributors,
+      };
 
-      event = {...event, payload}
+      event = { ...event, payload };
 
-      app.log(event)
+      app.log(event);
     },
   );
   app.on(
