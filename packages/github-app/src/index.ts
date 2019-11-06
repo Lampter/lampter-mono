@@ -24,11 +24,7 @@ export = (app: Application) => {
       "pull_request.unlabeled",
       "pull_request.synchronize",
     ],
-    async (
-      context: Context<
-        Webhooks.WebhookPayloadPullRequest & { [key: string]: any }
-      >,
-    ) => {
+    async (context: Context<Webhooks.WebhookPayloadPullRequest>) => {
       // Pull Request Data Formating
       let event = getEventBase(context);
       const payload = getPullRequestPayload(context);
