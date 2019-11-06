@@ -101,8 +101,6 @@ export = (app: Application) => {
     async (context: Context<Webhooks.WebhookPayloadPullRequest & {[key:string]: any}>) => {
       // TODO: Pull Request Data Formating
       const {pull_request, repository, sender} = context.payload
-     
-      app.log(context.payload)
 
       const payload: Partial<PullRequestPayload> = {
         repository: {
@@ -142,7 +140,7 @@ export = (app: Application) => {
 
       event = {...event, payload}
 
-      // app.log(event)
+      app.log(event)
     },
   );
   app.on(
