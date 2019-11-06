@@ -80,6 +80,7 @@ interface RecordContentPR {
   links: Link[];
 }
 
+// @ts-ignore
 interface Record {
   githubId: string;
   name: string;
@@ -89,7 +90,6 @@ interface Record {
 
 // @ts-ignore
 export = (app: Application) => {
-  let record: Partial<Record> = {};
   app.on(`*`, async (context: Context<WebhookCommon>) => {
     const {
       id: githubId,
@@ -97,7 +97,6 @@ export = (app: Application) => {
       payload: { action },
     } = context;
 
-    record = { githubId, name, action };
     app.log(`${githubId} - ${name}${action && `.${action}`}`);
   });
 

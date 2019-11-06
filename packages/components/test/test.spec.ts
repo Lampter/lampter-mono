@@ -1,7 +1,5 @@
-import { expect } from "chai";
-
-describe("client", () => {
+describe("Components", () => {
   it("works", () => {
-    expect(true).to.equal(true);
+    expect(true).toBe(true);
   });
 });
