@@ -2,19 +2,13 @@ import { Application, Context } from "probot"; // eslint-disable-line no-unused-
 import Webhooks from "@octokit/webhooks";
 import { WebhookCommon } from "./types/models";
 import { getEventBase } from "./helpers/event";
-import { getPullRequestPayload } from "./helpers/pullRequest";
+import {
+  getPullRequestPayload,
+  getPullRequestReviewPayload,
+} from "./helpers/pullRequest";
 
 // @ts-ignore
 export = (app: Application) => {
-  app.on(`*`, async (context: Context<WebhookCommon>) => {
-    const event = getEventBase(context);
-
-    app.log(
-      `${event.originalId} - ${event.name}${event.action &&
-        `.${event.action}`}`,
-    );
-  });
-
   app.on(
     [
       "pull_request",
@@ -35,13 +29,10 @@ export = (app: Application) => {
         Webhooks.WebhookPayloadPullRequest & { [key: string]: any }
       >,
     ) => {
-      // TODO: Pull Request Data Formating
+      // Pull Request Data Formating
       let event = getEventBase(context);
-
       const payload = getPullRequestPayload(context);
-
       event = { ...event, payload };
-
       app.log(event);
     },
   );
@@ -52,8 +43,12 @@ export = (app: Application) => {
       "pull_request_review.edited",
       "pull_request_review.submitted",
     ],
-    async (_: Context<Webhooks.WebhookPayloadPullRequestReview>) => {
-      // TODO: Pull Request Review Data Formating
+    async (context: Context<Webhooks.WebhookPayloadPullRequestReview>) => {
+      // Pull Request Review Data Formating
+      let event = getEventBase(context);
+      const payload = getPullRequestReviewPayload(context);
+      event = { ...event, payload };
+      app.log(event);
     },
   );
   app.on(
@@ -67,63 +62,63 @@ export = (app: Application) => {
       // TODO: Pull Request Review Comment Data Formating
     },
   );
-  app.on(
-    [
-      "project",
-      "project.closed",
-      "project.created",
-      "project.deleted",
-      "project.edited",
-      "project.reopened",
-    ],
-    async (_: Context<Webhooks.WebhookPayloadProject>) => {
-      // TODO: Project Data Formating
-    },
-  );
-  app.on(
-    [
-      "project_column",
-      "project_column.created",
-      "project_column.deleted",
-      "project_column.edited",
-      "project_column.moved",
-    ],
-    async (_: Context<Webhooks.WebhookPayloadProjectColumn>) => {
-      // TODO: Project Column Data Formating
-    },
-  );
-  app.on(
-    [
-      "project_card",
-      "project_card.converted",
-      "project_card.created",
-      "project_card.deleted",
-      "project_card.edited",
-      "project_card.moved",
-    ],
-    async (_: Context<Webhooks.WebhookPayloadProjectCard>) => {
-      // TODO: Project Card Data Formating
-    },
-  );
-  app.on(
-    [
-      "milestone",
-      "milestone.closed",
-      "milestone.created",
-      "milestone.deleted",
-      "milestone.edited",
-      "milestone.opened",
-    ],
-    async (_: Context<Webhooks.WebhookPayloadMilestone>) => {
-      // TODO: Milestone Data Formating
-    },
-  );
-  app.on(
-    ["label", "label.created", "label.deleted", "label.edited"],
-    async (_: Context<Webhooks.WebhookPayloadLabel>) => {
-      // TODO: Label Data Formating
-    },
-  );
+  // app.on(
+  //   [
+  //     "project",
+  //     "project.closed",
+  //     "project.created",
+  //     "project.deleted",
+  //     "project.edited",
+  //     "project.reopened",
+  //   ],
+  //   async (_: Context<Webhooks.WebhookPayloadProject>) => {
+  //     // Project Data Formating
+  //   },
+  // );
+  // app.on(
+  //   [
+  //     "project_column",
+  //     "project_column.created",
+  //     "project_column.deleted",
+  //     "project_column.edited",
+  //     "project_column.moved",
+  //   ],
+  //   async (_: Context<Webhooks.WebhookPayloadProjectColumn>) => {
+  //     // Project Column Data Formating
+  //   },
+  // );
+  // app.on(
+  //   [
+  //     "project_card",
+  //     "project_card.converted",
+  //     "project_card.created",
+  //     "project_card.deleted",
+  //     "project_card.edited",
+  //     "project_card.moved",
+  //   ],
+  //   async (_: Context<Webhooks.WebhookPayloadProjectCard>) => {
+  //     // Project Card Data Formating
+  //   },
+  // );
+  // app.on(
+  //   [
+  //     "milestone",
+  //     "milestone.closed",
+  //     "milestone.created",
+  //     "milestone.deleted",
+  //     "milestone.edited",
+  //     "milestone.opened",
+  //   ],
+  //   async (_: Context<Webhooks.WebhookPayloadMilestone>) => {
+  //     // Milestone Data Formating
+  //   },
+  // );
+  // app.on(
+  //   ["label", "label.created", "label.deleted", "label.edited"],
+  //   async (_: Context<Webhooks.WebhookPayloadLabel>) => {
+  //     // Label Data Formating
+  //   },
+  // );
   app.on(
     [
       "issues",
@@ -156,6 +151,14 @@ export = (app: Application) => {
       // TODO: Deployment Status Data Formating
     },
   );
+
+  // app.on(`*`, async (context: Context<WebhookCommon>) => {
+  //   const event = getEventBase(context);
+  //   app.log(
+  //     `${event.originalId} - ${event.name}${event.action &&
+  //       `.${event.action}`}`,
+  //   );
+  // });
   // For more information on building apps:
   // https://probot.github.io/docs/
 

@@ -56,7 +56,7 @@ export default class Issue extends Model<Issue> {
   @Column
   public projectId!: number;
 
-  @BelongsTo(() => Project)
+  @BelongsTo(() => Project, { constraints: true })
   public project!: Project;
 
   @Field({ description: "Application of the issue." })

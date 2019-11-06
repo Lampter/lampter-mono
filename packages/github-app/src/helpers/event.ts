@@ -1,17 +1,20 @@
 import { Context } from "probot";
-import { Event, WebhookCommon } from "../types/models";
+import { Event, WebhookCommon, EventAction } from "../types/models";
 
-export const getEventBase = (context: Context<WebhookCommon>) => {
+const getAction = (context: Context<WebhookCommon>) => {
   const {
-    id: originalId,
     name,
     payload: { action },
   } = context;
 
+  const eventAction = `${name}${action &&
+    `__${action}`}`.toUpperCase() as EventAction;
+  return eventAction;
+};
+
+export const getEventBase = (context: Context<WebhookCommon>) => {
   return {
     applicationId: 1,
-    originalId,
-    name,
-    action,
+    action: getAction(context),
   } as Partial<Event>;
 };

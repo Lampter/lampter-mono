@@ -5,8 +5,10 @@ import {
   ContributorRole,
   GithubRepository,
   PullRequest,
+  Review,
   Label,
   PullRequestPayload,
+  PullRequestReviewPayload,
 } from "../types/models";
 import Webhooks from "@octokit/webhooks";
 
@@ -37,7 +39,7 @@ const getGithubContributor = (
   role,
 });
 
-const getContributors = (
+const getPRContributors = (
   pr: Webhooks.WebhookPayloadPullRequestPullRequest,
 ): GithubContributor[] => {
   return [
@@ -55,7 +57,9 @@ const getContributors = (
 };
 
 const getPullRequest = (
-  pr: Webhooks.WebhookPayloadPullRequestPullRequest,
+  pr:
+    | Webhooks.WebhookPayloadPullRequestPullRequest
+    | Webhooks.WebhookPayloadPullRequestReviewPullRequest,
 ): PullRequest => ({
   applicationId: 1, //GITHUB
   originalId: pr.id,
@@ -85,10 +89,34 @@ const getPullRequest = (
   reviewComments: pr.review_comments,
 });
 
+const getReview = (
+  rw: Webhooks.WebhookPayloadPullRequestReviewReview,
+): Review => ({
+  applicationId: 1, //GITHUB
+  originalId: rw.id,
+  commitId: rw.commit_id,
+  submittedAt: rw.submitted_at,
+  state: rw.state,
+  url: rw.html_url,
+});
+
 export const getPullRequestPayload = ({
   payload,
 }: Context<Webhooks.WebhookPayloadPullRequest>): PullRequestPayload => ({
   repository: getRepository(payload.repository),
   pullRequest: getPullRequest(payload.pull_request),
-  contributors: getContributors(payload.pull_request),
+  contributors: getPRContributors(payload.pull_request),
+});
+
+export const getPullRequestReviewPayload = ({
+  payload,
+}: Context<
+  Webhooks.WebhookPayloadPullRequestReview
+>): PullRequestReviewPayload => ({
+  repository: getRepository(payload.repository),
+  pullRequest: getPullRequest(payload.pull_request),
+  review: getReview(payload.review),
+  contributors: [
+    getGithubContributor(payload.review.user, ContributorRole.PR_REVIEW),
+  ],
 });
