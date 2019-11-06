@@ -26,6 +26,14 @@ interface PullRequestRef {
   sha: string;
 }
 
+interface Label {
+  applicationId: 1; //GITHUB
+  originalId: number;
+  name: string;
+  color: string;
+  [key: string]: any;
+}
+
 interface PullRequest {
   applicationId: 1; //GITHUB
   originalId: number;
@@ -33,6 +41,7 @@ interface PullRequest {
   body: string;
   head: PullRequestRef;
   base: PullRequestRef;
+  labels: Label[];
   state: string;
   merged: boolean;
   mergeable: boolean | null;
@@ -136,6 +145,13 @@ export = (app: Application) => {
         ),
       ];
 
+      const labels = pull_request.labels.map(label => ({
+        applicationId: 1,
+        originalId: label.id,
+        name: label.name,
+        color: label.color,
+      })) as Label[];
+
       const payload: Partial<PullRequestPayload> = {
         repository: {
           applicationId: 1, // GITHUB
@@ -158,6 +174,7 @@ export = (app: Application) => {
             ref: pull_request.base.ref,
             sha: pull_request.base.sha,
           },
+          labels,
           state: pull_request.state,
           merged: pull_request.merged,
           mergeable: pull_request.mergeable,
