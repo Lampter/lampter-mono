@@ -54,7 +54,6 @@ export default class EventResolver {
   }: CreateEventInputArgs) {
     let referenceId: number | undefined = undefined;
     let reference: string | undefined = undefined;
-    // FIXME: Use action directly instead of passing the reference ?
     switch (action) {
       // Deal With pull_request events
       case EventAction.PULL_REQUEST__ASSIGNED:
@@ -95,6 +94,7 @@ export default class EventResolver {
           pr.traceId = trace.id;
         }
 
+        // FIXME: Dunno if we need this ?
         // Find OR Create Repository
         const repository = await Repository.findOne({
           where: {
