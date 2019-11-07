@@ -13,9 +13,6 @@ import Event, { EventAction } from "../models/Event";
 import PullRequest from "../models/PullRequest";
 import Repository from "../models/Repository";
 import Trace from "../models/Trace";
-// import { Context, UserPayLoad, Role } from "../utils/Context";
-
-// const expiresIn = "1d";
 @ArgsType()
 class CreateEventInputArgs {
   @Field()
@@ -30,21 +27,6 @@ class CreateEventInputArgs {
 
 @Resolver(Event)
 export default class EventResolver {
-  // @Authorized([Role.USER])
-  // @Query(() => Event)
-  // public async me(@Ctx() ctx: Context) {
-  //   if (ctx.user && ctx.user.role === Role.USER) {
-  //     const user = await Event.findOne({
-  //       where: { id: ctx.user.id },
-  //     });
-  //     if (!user) {
-  //       throw new Error("Event not found");
-  //     }
-  //     return user;
-  //   }
-  //   throw new Error("Event not found");
-  // }
-
   @Mutation(() => Event)
   public async createEvent(@Args()
   {
@@ -55,7 +37,6 @@ export default class EventResolver {
     let referenceId: number | undefined = undefined;
     let reference: string | undefined = undefined;
     switch (action) {
-      // Deal With pull_request events
       case EventAction.PULL_REQUEST__ASSIGNED:
       case EventAction.PULL_REQUEST__CLOSED:
       case EventAction.PULL_REQUEST__EDITED:
