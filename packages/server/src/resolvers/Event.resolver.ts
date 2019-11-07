@@ -11,6 +11,8 @@ import {
 } from "type-graphql";
 import Event, { EventAction } from "../models/Event";
 import PullRequest from "../models/PullRequest";
+import Repository from "../models/Repository";
+import Trace from "../models/Trace";
 // import { Context, UserPayLoad, Role } from "../utils/Context";
 
 // const expiresIn = "1d";
@@ -67,11 +69,55 @@ export default class EventResolver {
       case EventAction.PULL_REQUEST__UNLABELED:
       case EventAction.PULL_REQUEST__SYNCHRONIZE: {
         reference = "pull_request";
-        const { pullRequest: pr }: any = JSON.parse(payload);
-        const pullRequest = await PullRequest.findOne({
-          where: { originalId: pr.originalId, applicationId: pr.applicationId },
-        });
+        const {
+          pullRequest: { repository: repo, ...pr },
+        }: any = JSON.parse(payload);
 
+        // Find OR Create Trace
+        const trace = await Trace.findOne({
+          include: [
+            {
+              model: PullRequest,
+              where: {
+                originalId: pr.originalId,
+                applicationId: pr.applicationId,
+              },
+            },
+          ],
+        });
+        if (!trace) {
+          const newTrace = await Trace.create({
+            title: pr.title,
+            description: pr.body,
+          });
+          pr.traceId = newTrace.id;
+        } else {
+          pr.traceId = trace.id;
+        }
+
+        // Find OR Create Repository
+        const repository = await Repository.findOne({
+          where: {
+            originalId: repo.originalId,
+            applicationId: repo.applicationId,
+          },
+        });
+        if (!repository) {
+          const newRepository = await Repository.create({
+            ...repo,
+          });
+          pr.repositoryId = newRepository.id;
+        } else {
+          pr.repositoryId = repository.id;
+        }
+
+        // Find OR Create PullRequest
+        const pullRequest = await PullRequest.findOne({
+          where: {
+            originalId: pr.originalId,
+            applicationId: pr.applicationId,
+          },
+        });
         if (!pullRequest) {
           const newPullRequest = await PullRequest.create({
             ...pr,
@@ -83,8 +129,10 @@ export default class EventResolver {
         } else {
           referenceId = pullRequest.id;
         }
+
         break;
       }
+
       // TODO: Deal with issue events
       // case "issue": {
       //   break;
