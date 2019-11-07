@@ -10,19 +10,19 @@ import {
   // ObjectType,
 } from "type-graphql";
 import Event, { EventAction } from "../models/Event";
-// import { IsEmail, Length } from "class-validator";
+import PullRequest from "../models/PullRequest";
 // import { Context, UserPayLoad, Role } from "../utils/Context";
 
 // const expiresIn = "1d";
-
 @ArgsType()
 class CreateEventInputArgs {
   @Field()
-  // @IsEmail()
   public applicationId!: number;
 
   @Field()
-  // @Length(8, 255)
+  public reference!: string;
+
+  @Field()
   public action!: EventAction;
 
   @Field()
@@ -50,38 +50,50 @@ export default class EventResolver {
   public async createEvent(@Args()
   {
     applicationId,
+    reference,
     action,
     payload,
   }: CreateEventInputArgs) {
-    console.log(JSON.parse(payload));
+    let referenceId: number;
+    // FIXME: Use action directly instead of passing the reference ?
+    switch (reference) {
+      // Deal With pull_request events
+      case "pull_request": {
+        const { pullRequest: pr }: any = JSON.parse(payload);
+        const pullRequest = await PullRequest.findOne({
+          where: { originalId: pr.originalId, applicationId: pr.applicationId },
+        });
+
+        if (!pullRequest) {
+          const newPullRequest = await PullRequest.create({
+            ...pr,
+            labels: JSON.stringify(pr.labels),
+            head: JSON.stringify(pr.head),
+            base: JSON.stringify(pr.base),
+          });
+          referenceId = newPullRequest.id;
+        } else {
+          referenceId = pullRequest.id;
+        }
+        break;
+      }
+      // TODO: Deal with issue events
+      // case "issue": {
+      //   break;
+      // }
+      default: {
+        referenceId = 10000;
+      }
+    }
 
     const newEvent = Event.create({
       applicationId,
-      reference: "pull_request",
-      referenceId: 10000,
+      reference,
+      referenceId,
       action,
       payload,
     });
 
     return newEvent;
-    // Check if the event is valid ?
-    // const event = await Event.findOne({ where: { email } });
-    // if (user) {
-    //   throw new Error("Event exists");
-    // }
-    // Check if the password is valid
-    // const valid = await bcrypt.compare(password, user.password);
-    // if (!valid) {
-    //   throw new Error("Incorrect password");
-    // }
-    // const payload: EventPayLoad = {
-    //   id: user.id,
-    //   role: Role.USER,
-    // };
-    // // Generate a new token a save it
-    // const token = jsonwebtoken.sign(payload, process.env.CRYPTO_KEY!, {
-    //   expiresIn,
-    // });
-    // return { token };
   }
 }
