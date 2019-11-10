@@ -69,8 +69,17 @@ type Issue {
   """Body of the issue."""
   body: String!
 
+  """labels of the issue."""
+  labels: String!
+
+  """State of the issue."""
+  state: String!
+
   """Url of the issue."""
   url: String!
+
+  """Comment count of the issue."""
+  comments: Float!
 
   """Trace of the issue."""
   traceId: Float!

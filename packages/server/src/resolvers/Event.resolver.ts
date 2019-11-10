@@ -10,6 +10,7 @@ import {
   // ObjectType,
 } from "type-graphql";
 import Event, { EventAction } from "../models/Event";
+import Issue from "../models/Issue";
 import PullRequest from "../models/PullRequest";
 import Repository from "../models/Repository";
 import Trace from "../models/Trace";
@@ -109,6 +110,82 @@ export default class EventResolver {
           referenceId = newPullRequest.id;
         } else {
           referenceId = pullRequest.id;
+        }
+
+        break;
+      }
+
+      case EventAction.ISSUES__ASSIGNED:
+      case EventAction.ISSUES__CLOSED:
+      case EventAction.ISSUES__DELETED:
+      case EventAction.ISSUES__DEMILESTONED:
+      case EventAction.ISSUES__EDITED:
+      case EventAction.ISSUES__LABELED:
+      case EventAction.ISSUES__MILESTONED:
+      case EventAction.ISSUES__OPENED:
+      case EventAction.ISSUES__REOPENED:
+      case EventAction.ISSUES__TRANSFERED:
+      case EventAction.ISSUES__UNASSIGNED:
+      case EventAction.ISSUES__UNLABELED: {
+        reference = "issue";
+        const {
+          issue: { repository: repo, ...iss },
+        }: any = JSON.parse(payload);
+
+        // Find OR Create Trace
+        const trace = await Trace.findOne({
+          include: [
+            {
+              model: Issue,
+              where: {
+                originalId: iss.originalId,
+                applicationId: iss.applicationId,
+              },
+            },
+          ],
+        });
+        if (!trace) {
+          const newTrace = await Trace.create({
+            title: iss.title,
+            description: iss.body,
+          });
+          iss.traceId = newTrace.id;
+        } else {
+          iss.traceId = trace.id;
+        }
+
+        // FIXME: Dunno if we need this ?
+        // Find OR Create Repository
+        const repository = await Repository.findOne({
+          where: {
+            originalId: repo.originalId,
+            applicationId: repo.applicationId,
+          },
+        });
+        if (!repository) {
+          const newRepository = await Repository.create({
+            ...repo,
+          });
+          iss.repositoryId = newRepository.id;
+        } else {
+          iss.repositoryId = repository.id;
+        }
+
+        // Find OR Create Issue
+        const issue = await Issue.findOne({
+          where: {
+            originalId: iss.originalId,
+            applicationId: iss.applicationId,
+          },
+        });
+        if (!issue) {
+          const newIssue = await Issue.create({
+            ...iss,
+            labels: JSON.stringify(iss.labels),
+          });
+          referenceId = newIssue.id;
+        } else {
+          referenceId = issue.id;
         }
 
         break;

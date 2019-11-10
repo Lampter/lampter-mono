@@ -94,3 +94,24 @@ export interface Event {
   action: EventAction;
   payload: PullRequestPayload | any; // add the other event structures here
 }
+
+export interface GithubIssue {
+  applicationId: 1; //GITHUB
+  originalId: number;
+  title: string;
+  body: string;
+  labels: Label[];
+  state: string;
+  user: GithubUser;
+  assignees: GithubUser[];
+  url: string;
+  comments: number;
+  createdAt: string;
+  updatedAt: string;
+  repository: GithubRepository;
+}
+
+export interface IssuePayload {
+  issue: GithubIssue;
+  sender: GithubUser;
+}
