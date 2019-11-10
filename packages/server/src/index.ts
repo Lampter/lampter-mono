@@ -9,14 +9,15 @@ import { db } from "./db";
 import { buildSchema } from "type-graphql";
 import { customAuthChecker } from "./utils/CustomAuthChecker";
 
+const APOLLO_ENGINE_KEY = process.env.ENGINE_API_KEY || "";
 const PORT = process.env.PORT || 5000;
 const GQLPATH = "/graphql";
 
 const main = async () => {
   // Uncomment force: true to reset DB
   await db.sync({
-    // force: true,
-    alter: true,
+    force: true,
+    // alter: true,
   });
 
   const schema = await buildSchema({
@@ -38,6 +39,9 @@ const main = async () => {
       return context;
     },
     schema,
+    engine: {
+      apiKey: APOLLO_ENGINE_KEY,
+    },
     introspection: true,
     playground: true,
   });
