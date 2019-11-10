@@ -36,7 +36,6 @@ const client = new ApolloClient({
 export = (app: Application) => {
   app.on(
     [
-      "pull_request",
       "pull_request.assigned",
       "pull_request.closed",
       "pull_request.edited",
@@ -152,7 +151,6 @@ export = (app: Application) => {
   // );
   app.on(
     [
-      "issues",
       "issues.assigned",
       "issues.closed",
       "issues.deleted",
