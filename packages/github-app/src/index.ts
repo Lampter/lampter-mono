@@ -4,6 +4,33 @@ import { getEventBase } from "./helpers/event";
 import { getPullRequestPayload } from "./helpers/pullRequest";
 import { getPullRequestReviewPayload } from "./helpers/review";
 import { getIssuePayload } from "./helpers/issue";
+import { ApolloClient } from "apollo-client";
+import gql from "graphql-tag";
+import { createHttpLink } from "apollo-link-http";
+import { InMemoryCache } from "apollo-cache-inmemory";
+import fetch from "node-fetch";
+
+const CREATE_GITHUB_EVENT = gql`
+  mutation CreateGithubEvent(
+    $applicationId: Float!
+    $action: String!
+    $payload: String!
+  ) {
+    createEvent(
+      applicationId: $applicationId
+      action: $action
+      payload: $payload
+    ) {
+      id
+    }
+  }
+`;
+
+const client = new ApolloClient({
+  // @ts-ignore
+  link: createHttpLink({ uri: "http://localhost:5000/graphql", fetch }),
+  cache: new InMemoryCache(),
+});
 
 // @ts-ignore
 export = (app: Application) => {
@@ -44,6 +71,15 @@ export = (app: Application) => {
       const payload = getPullRequestReviewPayload(context);
       event = { ...event, payload };
       app.log(event);
+
+      client.mutate({
+        mutation: CREATE_GITHUB_EVENT,
+        variables: {
+          applicationId: event.applicationId,
+          action: event.action,
+          payload: JSON.stringify(event.payload),
+        },
+      });
     },
   );
   app.on(
@@ -137,6 +173,15 @@ export = (app: Application) => {
       event = { ...event, payload };
       app.log(event);
       app.log(JSON.stringify(event.payload));
+
+      client.mutate({
+        mutation: CREATE_GITHUB_EVENT,
+        variables: {
+          applicationId: event.applicationId,
+          action: event.action,
+          payload: JSON.stringify(event.payload),
+        },
+      });
     },
   );
   app.on(

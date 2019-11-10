@@ -9,7 +9,6 @@ import Repository from "../models/Repository";
 import Project from "../models/Project";
 import Issue from "../models/Issue";
 import PullRequest from "../models/PullRequest";
-import Contributer from "../models/Contributer";
 import Event from "../models/Event";
 
 export const db = new Sequelize({
@@ -25,7 +24,6 @@ export const db = new Sequelize({
     Project,
     PullRequest,
     Issue,
-    Contributer,
     Event,
   ],
 });
