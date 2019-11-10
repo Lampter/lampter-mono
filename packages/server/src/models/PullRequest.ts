@@ -6,7 +6,6 @@ import {
   DataType,
   PrimaryKey,
   BelongsTo,
-  BelongsToMany,
   Table,
   ForeignKey,
   UpdatedAt,
@@ -16,9 +15,6 @@ import { Field, ObjectType } from "type-graphql";
 import Trace from "./Trace";
 import Repository from "./Repository";
 import Application from "./Application";
-import Contributer from "./Contributer";
-import User from "./User";
-
 @ObjectType()
 @Table
 export default class PullRequest extends Model<PullRequest> {
@@ -121,17 +117,6 @@ export default class PullRequest extends Model<PullRequest> {
 
   @BelongsTo(() => Application)
   public application!: Application;
-
-  @BelongsToMany(() => User, {
-    through: () => Contributer,
-    scope: {
-      reference: "repository",
-    },
-    foreignKey: "userId",
-    otherKey: "referenceId",
-    constraints: false,
-  })
-  public contributors!: Array<User & { Contributer: Contributer }>;
 
   @Field()
   @CreatedAt

@@ -1,5 +1,6 @@
 import { Context } from "probot";
-import { Event, WebhookCommon, EventAction } from "../types/models";
+import { Event, WebhookCommon } from "../types/models";
+import { EventAction } from "@lampter/server";
 
 const getAction = (context: Context<WebhookCommon>) => {
   const {

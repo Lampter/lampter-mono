@@ -8,10 +8,13 @@ import {
   Table,
   ForeignKey,
   UpdatedAt,
+  HasMany,
 } from "sequelize-typescript";
 import { Field, ObjectType } from "type-graphql";
 
 import Lens from "./Lens";
+import PullRequest from "./PullRequest";
+import Issue from "./Issue";
 
 @ObjectType()
 @Table
@@ -33,6 +36,12 @@ export default class Trace extends Model<Trace> {
 
   @BelongsTo(() => Lens)
   public lens!: Lens;
+
+  @HasMany(() => PullRequest)
+  public pullRequests!: PullRequest[];
+
+  @HasMany(() => Issue)
+  public issues!: Issue[];
 
   @Field()
   @CreatedAt

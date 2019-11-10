@@ -1,22 +1,8 @@
 import { Context } from "probot";
-import {
-  GithubUser,
-  GithubRepository,
-  GithubPullRequest,
-  GithubReview,
-  Label,
-  PullRequestPayload,
-  PullRequestReviewPayload,
-} from "../types/models";
+import { GithubPullRequest, Label, PullRequestPayload } from "../types/models";
 import Webhooks from "@octokit/webhooks";
-
-const getRepository = (repo: Webhooks.PayloadRepository): GithubRepository => ({
-  applicationId: 1, // GITHUB
-  originalId: repo.id,
-  title: repo.name,
-  url: repo.html_url,
-  owner: getUser(repo.owner),
-});
+import { getUser } from "./user";
+import { getRepository } from "./repository";
 
 const getLabels = (
   pr: Webhooks.WebhookPayloadPullRequestPullRequest,
@@ -29,13 +15,6 @@ const getLabels = (
         color: label.color,
       })) as Label[])
     : [];
-
-const getUser = (author: any): GithubUser => ({
-  applicationId: 1, //GITHUB
-  originalId: author.id,
-  login: author.login,
-  type: author.type,
-});
 
 const getPullRequest = ({
   pull_request: pr,
@@ -75,41 +54,9 @@ const getPullRequest = ({
   reviewComments: pr.review_comments,
 });
 
-const getReview = ({
-  review: rw,
-  pull_request: pr,
-}: Webhooks.WebhookPayloadPullRequestReview): GithubReview => ({
-  applicationId: 1, //GITHUB
-  body: `${rw.body}`,
-  originalId: rw.id,
-  pullRequest: {
-    applicationId: 1,
-    originalId: pr.id,
-    title: pr.title,
-    body: pr.body,
-    user: getUser(pr.user),
-    url: pr.html_url,
-  },
-  commitId: rw.commit_id,
-  submittedAt: rw.submitted_at,
-  state: rw.state,
-  url: rw.html_url,
-});
-
 export const getPullRequestPayload = ({
   payload,
 }: Context<Webhooks.WebhookPayloadPullRequest>): PullRequestPayload => ({
   pullRequest: getPullRequest(payload),
   sender: getUser(payload.sender),
 });
-
-export const getPullRequestReviewPayload = ({
-  payload,
-}: Context<
-  Webhooks.WebhookPayloadPullRequestReview
->): PullRequestReviewPayload => {
-  return {
-    review: getReview(payload),
-    sender: getUser(payload.sender),
-  };
-};

@@ -4,8 +4,8 @@ import {
   AutoIncrement,
   Model,
   PrimaryKey,
+  DataType,
   BelongsTo,
-  BelongsToMany,
   Table,
   ForeignKey,
   UpdatedAt,
@@ -15,8 +15,6 @@ import { Field, ObjectType } from "type-graphql";
 import Trace from "./Trace";
 import Project from "./Project";
 import Application from "./Application";
-import Contributer from "./Contributer";
-import User from "./User";
 
 @ObjectType()
 @Table
@@ -39,9 +37,21 @@ export default class Issue extends Model<Issue> {
   @Column
   public body!: string;
 
+  @Field(_ => String, { description: "labels of the issue." })
+  @Column(DataType.JSON)
+  public labels!: string;
+
+  @Field({ description: "State of the issue." })
+  @Column
+  public state!: string; // FIXME: Enum ?
+
   @Field({ description: "Url of the issue." })
   @Column
   public url!: string;
+
+  @Field({ description: "Comment count of the issue." })
+  @Column
+  public comments!: number;
 
   @Field({ description: "Trace of the issue." })
   @ForeignKey(() => Trace)
@@ -56,7 +66,7 @@ export default class Issue extends Model<Issue> {
   @Column
   public projectId!: number;
 
-  @BelongsTo(() => Project, { constraints: true })
+  @BelongsTo(() => Project, { constraints: false })
   public project!: Project;
 
   @Field({ description: "Application of the issue." })
@@ -66,17 +76,6 @@ export default class Issue extends Model<Issue> {
 
   @BelongsTo(() => Application)
   public application!: Application;
-
-  @BelongsToMany(() => User, {
-    through: () => Contributer,
-    scope: {
-      reference: "issue",
-    },
-    foreignKey: "userId",
-    otherKey: "referenceId",
-    constraints: false,
-  })
-  public contributors!: Array<User & { Contributer: Contributer }>;
 
   @Field()
   @CreatedAt

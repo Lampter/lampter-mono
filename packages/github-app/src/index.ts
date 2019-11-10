@@ -1,10 +1,9 @@
 import { Application, Context } from "probot"; // eslint-disable-line no-unused-vars
 import Webhooks from "@octokit/webhooks";
 import { getEventBase } from "./helpers/event";
-import {
-  getPullRequestPayload,
-  getPullRequestReviewPayload,
-} from "./helpers/pullRequest";
+import { getPullRequestPayload } from "./helpers/pullRequest";
+import { getPullRequestReviewPayload } from "./helpers/review";
+import { getIssuePayload } from "./helpers/issue";
 
 // @ts-ignore
 export = (app: Application) => {
@@ -29,6 +28,7 @@ export = (app: Application) => {
       const payload = getPullRequestPayload(context);
       event = { ...event, payload };
       app.log(event);
+      app.log(JSON.stringify(event.payload));
     },
   );
   app.on(
@@ -130,8 +130,13 @@ export = (app: Application) => {
       "issues.unassigned",
       "issues.unlabeled",
     ],
-    async (_: Context<Webhooks.WebhookPayloadIssues>) => {
+    async (context: Context<Webhooks.WebhookPayloadIssues>) => {
       // TODO: Issues Data Formating
+      let event = getEventBase(context);
+      const payload = getIssuePayload(context);
+      event = { ...event, payload };
+      app.log(event);
+      app.log(JSON.stringify(event.payload));
     },
   );
   app.on(
