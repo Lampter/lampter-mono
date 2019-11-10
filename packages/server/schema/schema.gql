@@ -205,6 +205,7 @@ type PullRequest {
 }
 
 type Query {
+  issues: [Issue!]!
   me: User!
 }
 
